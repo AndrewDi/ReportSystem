@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="org.logback-extensions:logback-ext-spring:0.1.4" type="repository">
+    <properties maven-id="org.logback-extensions:logback-ext-spring:0.1.4" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/logback-ext-spring-0.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/logback-classic-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/logback-core-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

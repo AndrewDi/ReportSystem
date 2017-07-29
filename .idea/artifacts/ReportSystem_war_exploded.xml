@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="ReportSystem:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/ReportSystem_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="ReportSystem/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="ReportSystem" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Spring-4.3.9.RELEASE" />
+          <element id="library" level="project" name="Spring MVC-4.3.9.RELEASE" />
+          <element id="library" level="project" name="com.trilead:trilead-ssh2:1.0.0-build220" />
+          <element id="library" level="project" name="org.logback-extensions:logback-ext-spring:0.1.4" />
+          <element id="library" level="project" name="org.slf4j:jcl-over-slf4j:1.7.25" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

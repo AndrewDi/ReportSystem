@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.trilead:trilead-ssh2:1.0.0-build220" type="repository">
+    <properties maven-id="com.trilead:trilead-ssh2:1.0.0-build220" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/trilead-ssh2-1.0.0-build220.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
