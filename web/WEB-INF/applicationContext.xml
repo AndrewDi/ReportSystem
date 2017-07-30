@@ -76,6 +76,7 @@
     <mvc:resources mapping="/Images/**" location="/Images/" cache-period="0"/>
     <mvc:resources mapping="/Javascript/**" location="/Javascript/" cache-period="0"/>
     <mvc:resources mapping="/Css/**" location="/Css/" cache-period="0"/>
+    <mvc:resources mapping="/fonts/**" location="/fonts/" cache-period="0"/>
 
     <!-- 总错误处理-->
     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
