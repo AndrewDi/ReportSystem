@@ -72,6 +72,9 @@
 
     <mvc:annotation-driven/>
 
+    <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
     <!-- 对静态资源文件的访问-->
     <mvc:resources mapping="/Images/**" location="/Images/" cache-period="0"/>
     <mvc:resources mapping="/Javascript/**" location="/Javascript/" cache-period="0"/>

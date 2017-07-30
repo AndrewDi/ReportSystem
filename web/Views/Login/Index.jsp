@@ -17,7 +17,7 @@
     <meta name="author" content="">
     <!--<link rel="icon" href="../../favicon.ico"> -->
 
-    <title>Signin Template for Bootstrap</title>
+    <title>登陆Report System</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/Css/bootstrap.css" rel="stylesheet">
@@ -32,17 +32,17 @@
 <div class="container">
 
     <form class="form-signin"  action="/Home/index" method="post" commandName="login" >
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <h2 class="form-signin-heading">请登陆</h2>
+        <label for="InputUserName" class="sr-only">用户名</label>
+        <input type="text" id="InputUserName" class="form-control" placeholder="用户名" required autofocus>
+        <label for="inputPassword" class="sr-only">密码</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
         <div class="checkbox">
             <label>
-                <input type="checkbox" value="remember-me"> Remember me
+                <input type="checkbox" value="remember-me"> 记住我
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
     </form>
 
 </div> <!-- /container -->
