@@ -9,9 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/Home")
 public class HomeController {
 
-    @RequestMapping("hello")
+    @RequestMapping("index")
     public String hello(ModelMap modelMap){
-        modelMap.addAttribute("name","hello,world");
+
         return "Home/Index";
     }
 }

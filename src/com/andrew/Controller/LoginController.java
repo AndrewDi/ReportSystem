@@ -13,5 +13,4 @@ public class LoginController {
         return new ModelAndView("Login/Index");
     }
 
-
 }
