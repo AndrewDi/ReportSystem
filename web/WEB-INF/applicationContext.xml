@@ -30,16 +30,21 @@
         </property>
     </bean>
 
+    <!--
     <bean id="dataSourceProxy" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
         <property name="targetDataSource" ref="DB2DruidDataSource"/>
     </bean>
+    -->
 
     <!--注入jdbcTemplate -->
+    <!--
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <constructor-arg ref="dataSourceProxy"/>
     </bean>
+    -->
 
     <!--使用Druid连接池 -->
+    <!--
     <bean id="DB2DruidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="driverClassName" value="com.ibm.db2.jcc.DB2Driver" />
         <property name="url" value="${jdbc.url}" />
@@ -65,6 +70,7 @@
         </property>
     </bean>
     <tx:annotation-driven transaction-manager="transactionManager"/>
+    -->
 
     <!--
     <mvc:default-servlet-handler/>

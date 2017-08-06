@@ -34,7 +34,7 @@
     <form class="form-signin"  action="/Home/index" method="post" commandName="login" >
         <h2 class="form-signin-heading">请登陆</h2>
         <label for="InputUserName" class="sr-only">用户名</label>
-        <input type="text" id="InputUserName" class="form-control" placeholder="用户名" required autofocus>
+        <input id="InputUserName" class="form-control" placeholder="用户名" required autofocus>
         <label for="inputPassword" class="sr-only">密码</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
         <div class="checkbox">
