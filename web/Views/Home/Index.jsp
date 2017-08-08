@@ -9,56 +9,21 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Dashboard</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="/Css/bootstrap.css" rel="stylesheet">
-
-       <!-- Custom styles for this template -->
+    <jsp:include page="../Common/include.jsp"/>
     <link href="/Css/dashboard.css" rel="stylesheet">
 </head>
 
 <body>
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Report System</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<jsp:include page="../Common/topbar.jsp"/>
 
 <div class="container-fluid">
    <div class="row">
-
+       <jsp:include page="../Common/navbar.jsp"/>
+       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+           <h1 class="page-header">Dashboard</h1>
+       </div>
    </div>
 </div>
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="/Javascript/jquery.js"></script>
-<script>window.jQuery || document.write('<script src="/Javascript/jquery.js"><\/script>')</script>
-<script src="/Javascript/bootstrap.js"></script>
+<jsp:include page="../Common/bottom.jsp"/>
 </body>
 </html>

@@ -12,7 +12,10 @@
     <description>Spring公共配置文件 </description>
 
     <!-- 配置自动扫描的包 -->
-    <context:component-scan base-package="com.andrew.Controller,com.andrew.Services"></context:component-scan>
+    <context:component-scan base-package="com.andrew.Controller,com.andrew.Service"></context:component-scan>
+
+    <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
     <!-- 配置视图解析器 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -30,21 +33,16 @@
         </property>
     </bean>
 
-    <!--
     <bean id="dataSourceProxy" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
         <property name="targetDataSource" ref="DB2DruidDataSource"/>
     </bean>
-    -->
 
     <!--注入jdbcTemplate -->
-    <!--
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <constructor-arg ref="dataSourceProxy"/>
     </bean>
-    -->
 
     <!--使用Druid连接池 -->
-    <!--
     <bean id="DB2DruidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="driverClassName" value="com.ibm.db2.jcc.DB2Driver" />
         <property name="url" value="${jdbc.url}" />
@@ -70,7 +68,6 @@
         </property>
     </bean>
     <tx:annotation-driven transaction-manager="transactionManager"/>
-    -->
 
     <!--
     <mvc:default-servlet-handler/>
@@ -78,19 +75,16 @@
 
     <mvc:annotation-driven/>
 
-    <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-
     <!-- 对静态资源文件的访问-->
     <mvc:resources mapping="/Images/**" location="/Images/" cache-period="0"/>
     <mvc:resources mapping="/Javascript/**" location="/Javascript/" cache-period="0"/>
     <mvc:resources mapping="/Css/**" location="/Css/" cache-period="0"/>
     <mvc:resources mapping="/fonts/**" location="/fonts/" cache-period="0"/>
 
-    <!-- 总错误处理-->
+    <!-- 总错误处理
     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="defaultErrorView">
-            <value>/Views/Error/500</value>
+            <value>Error/500</value>
         </property>
         <property name="defaultStatusCode">
             <value>500</value>
@@ -99,4 +93,5 @@
             <value>org.springframework.web.servlet.handler.SimpleMappingExceptionResolver</value>
         </property>
     </bean>
+    -->
 </beans>

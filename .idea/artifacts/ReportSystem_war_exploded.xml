@@ -16,6 +16,7 @@
           <element id="library" level="project" name="com.alibaba:druid:1.1.2" />
           <element id="library" level="project" name="db2jcc" />
           <element id="library" level="project" name="com.google.guava:guava:22.0" />
+          <element id="library" level="project" name="jstl" />
         </element>
       </element>
     </root>
