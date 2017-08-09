@@ -3,8 +3,5 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-
-<title>Dashboard</title>
-
 <!-- Bootstrap core CSS -->
 <link href="/Css/bootstrap.css" rel="stylesheet">
