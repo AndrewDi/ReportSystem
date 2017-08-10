@@ -100,4 +100,9 @@
         </property>
     </bean>
     -->
+
+    <bean id="configService" class="com.andrew.Service.ConfigService">
+        <property name="shellPath" value="E:\Developer\Java\ReportSystem\web\Shell"/>
+        <property name="keyPre" value="{AES}"/>
+    </bean>
 </beans>
