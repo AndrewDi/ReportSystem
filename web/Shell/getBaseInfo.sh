@@ -22,6 +22,18 @@ if [ -f /etc/SuSE-release ];then
    swapsize=$(echo "${freem}"|awk '$1~/Swap/{print $2}');
    swapfree=$(echo "${freem}"|awk '$1~/Swap/{print $4}');
    cpusize=$(grep processor /proc/cpuinfo|wc -l);
+
+elif [ -f /etc/redhat-release ];then
+   ##Get Full OSLevel
+   OSType="RHEL";
+   Major=$(awk -F'=' '$1~/VERSION/{print $(NF-1),$NF}' /etc/redhat-release);
+
+   ##Get Memsize and Swapsize
+   freem=$(free -m);
+   memsize=$(echo "${freem}"|awk '$1~/Mem/{print $2}');
+   swapsize=$(echo "${freem}"|awk '$1~/Swap/{print $2}');
+   swapfree=$(echo "${freem}"|awk '$1~/Swap/{print $4}');
+   cpusize=$(grep processor /proc/cpuinfo|wc -l);
 fi
 
 echo "oslevel|${OSType}${Major} ${Patch}";
