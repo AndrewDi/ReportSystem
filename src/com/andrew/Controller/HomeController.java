@@ -13,10 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -71,8 +70,22 @@ public class HomeController {
             for (String[] info:ArrayUtils.strToList(shBaseInfo)) {
                 BaseInfo.put(info[0],info[1]);
             }
+
+            //Sync to get Tablespace Usage and State
+            modelMap.addAttribute("tbspace",dbConnService.getTBSpaceUtilization(DBName));
+
+            //Sync to get Bufferpool Usae and Info
+            modelMap.addAttribute("bpfs",dbConnService.getBpfHitRation(DBName));
         }
         modelMap.addAttribute("BaseInfo",BaseInfo);
         return "Home/DBReport";
+    }
+
+
+    @RequestMapping("getrspt")
+    public @ResponseBody List<Map<String,Object>> getRSPT(@RequestParam(value = "DBName",required = true) String DBName,
+                                                          @RequestParam(value = "StartTime",required = true) String StartTime,
+                                                          @RequestParam(value = "EndTime",required = true) String EndTime){
+        return this.dbConnService.getRSPT(DBName,StartTime,EndTime);
     }
 }

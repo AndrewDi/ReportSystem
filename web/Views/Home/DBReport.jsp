@@ -13,7 +13,7 @@
 <html lang="zh-CN">
 <head>
     <jsp:include page="../Common/include.jsp"/>
-    <script src="/Javascript/echarts-all.js"></script>
+    <script src="/Javascript/echarts.js"></script>
     <title>数据库巡检报告</title>
 </head>
 <body>
@@ -156,8 +156,190 @@
                 1) 表空间使用情况检查：
             </div>
         </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <caption>说明：如果tbsp.TBSP_STATE!='NORMAL'||(tbsp.TBSP_TYPE=='DMS'&&tbsp.TBSP_UTILIZATION_PERCENT>75&&tbsp.TBSP_MAX_SIZE>0)，则State检查结果为False，并且状态为红色</caption>
+                <thead>
+                <tr>
+                    <th>表空间名称</th>
+                    <th>表空间类型</th>
+                    <th>状态</th>
+                    <th>Total(KB)</th>
+                    <th>Used(KB)</th>
+                    <th>Free(KB)</th>
+                    <th>Percent</th>
+                    <th>Auto Resize</th>
+                    <th>MaxSize</th>
+                    <th>State</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="tbsp" items="${tbspace}">
+                    <c:choose>
+                        <c:when test="${tbsp.TBSP_STATE!='NORMAL'||(tbsp.TBSP_TYPE=='DMS'&&tbsp.TBSP_UTILIZATION_PERCENT>75&&tbsp.TBSP_MAX_SIZE>0)}">
+                            <tr class="danger">
+                        </c:when>
+                        <c:otherwise>
+                            <tr class="info">
+                        </c:otherwise>
+                    </c:choose>
+                    <td>${tbsp.TBSP_NAME}</td>
+                    <td>${tbsp.TBSP_TYPE}</td>
+                    <td>${tbsp.TBSP_STATE}</td>
+                    <td>${tbsp.TBSP_TOTAL_SIZE_KB}</td>
+                    <td>${tbsp.TBSP_USED_SIZE_KB}</td>
+                    <td>${tbsp.TBSP_FREE_SIZE_KB}</td>
+                    <td>${tbsp.TBSP_UTILIZATION_PERCENT}</td>
+                    <td>${tbsp.TBSP_AUTO_RESIZE_ENABLED==1? 'Enable':'Disable'}</td>
+                    <td>${tbsp.TBSP_MAX_SIZE==-1? 'Ulimited':tbsp.TBSP_MAX_SIZE}</td>
+                    <c:choose>
+                        <c:when test="${tbsp.TBSP_STATE!='NORMAL'||(tbsp.TBSP_TYPE=='DMS'&&tbsp.TBSP_UTILIZATION_PERCENT>75&&tbsp.TBSP_MAX_SIZE>0)}">
+                            <td>False</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td>True</td>
+                        </c:otherwise>
+                    </c:choose>
+                </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                2) 缓冲池使用情况检查：
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <caption>说明：如果缓冲池命中率低于75%，则State检查结果为False，并且状态为Warning</caption>
+                <thead>
+                <tr>
+                    <th>Bufferpool_Name</th>
+                    <th>PageSize</th>
+                    <th>TotalSize</th>
+                    <th>Self_Tuning</th>
+                    <th>BP_Hit_Ratio</th>
+                    <th>State</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="bp" items="${bpfs}">
+                <c:choose>
+                    <c:when test="${bp.BP_HIT_RATIO<0.75}">
+                        <tr class="warn">
+                    </c:when>
+                    <c:otherwise>
+                        <tr class="info">
+                    </c:otherwise>
+                </c:choose>
+                    <td>${bp.BP_NAME}</td>
+                    <td>${bp.PAGESIZE}</td>
+                    <td>${bp.BP_CUR_BUFFSZ}</td>
+                    <td>${bp.SELF_TUNING_ENABLED==1? 'Enable':'Disable'}</td>
+                    <td>${bp.BP_HIT_RATIO}</td>
+                    <c:choose>
+                        <c:when test="${bp.BP_HIT_RATIO<0.75}">
+                            <td>False</td>
+                        </c:when>
+                    <c:otherwise>
+                        <td>True</td>
+                    </c:otherwise>
+                    </c:choose>
+                    </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                3) 数据库平均每秒事物数目：
+            </div>
+        </div>
+        <div class="row">
+            <div id="rspt" style="height: 400px;padding: 10px;"/>
+        </div>
     </div>
 </div>
 <jsp:include page="../Common/bottom.jsp"/>
+<script type="text/javascript">
+
+    var rsptChart = echarts.init(document.getElementById('rspt'));
+
+    rsptoption = {
+        title : {
+            text: '数据库事务平均响应时间'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['RSPT']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['周一','周二','周三','周四','周五','周六','周日']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value} °C'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'最高气温',
+                type:'line',
+                data:[11, 11, 15, 13, 12, 13, 10],
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name: '平均值'}
+                    ]
+                }
+            },
+            {
+                name:'最低气温',
+                type:'line',
+                data:[1, -2, 2, 5, 3, 2, 0],
+                markPoint : {
+                    data : [
+                        {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name : '平均值'}
+                    ]
+                }
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    rsptChart.setOption(rsptoption);
+    window.onresize  = rsptChart.resize;
+</script>
 </body>
 </html>
