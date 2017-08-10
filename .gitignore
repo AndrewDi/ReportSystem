@@ -57,7 +57,6 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.zip
@@ -72,5 +71,5 @@ hs_err_pid*
 .idea/dataSources/
 .idea/workspace.xml
 out/
-web/Images/
 /web/WEB-INF/jdbc.properties
+.idea/inspectionProfiles/

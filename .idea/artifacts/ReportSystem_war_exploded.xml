@@ -17,6 +17,7 @@
           <element id="library" level="project" name="db2jcc" />
           <element id="library" level="project" name="com.google.guava:guava:22.0" />
           <element id="library" level="project" name="jstl" />
+          <element id="library" level="project" name="org.codehaus.jackson:jackson-mapper-asl:1.9.0" />
         </element>
       </element>
     </root>
