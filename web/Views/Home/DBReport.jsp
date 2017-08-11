@@ -273,7 +273,7 @@
         </div>
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
-                5) 数据库表空间使用率：
+                5) 数据库并发执行应用数量：
             </div>
         </div>
         <div class="row">
@@ -290,22 +290,35 @@
         var chart = echarts.init(document.getElementById(divid),'infographic');
         var option = {
             title : {
-                text: title
+                text: title,
+                x:'center'
             },
             tooltip : {
                 trigger: 'axis'
-            },
-            legend: {
-                data:data.xaxis
             },
             toolbox: {
                 show : true,
                 feature : {
                     mark : {show: true},
+                    dataZoom : {
+                        show : true,
+                        title : {
+                            dataZoom : '区域缩放',
+                            dataZoomReset : '区域缩放后退'
+                        }
+                    },
                     dataView : {show: true, readOnly: true},
-                    magicType : {show: true, type: ['line','bar']},
-                    restore : {show: true},
-                    saveAsImage : {show: true}
+                    magicType : {show: false, type: ['line','bar']},
+                    restore : {
+                        show : true,
+                        title : '还原'
+                    },
+                    saveAsImage : {
+                        show : true,
+                        title : '保存为图片',
+                        type : 'jpeg',
+                        lang : ['点击保存']
+                    }
                 }
             },
             calculable : true,

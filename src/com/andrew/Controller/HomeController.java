@@ -74,7 +74,7 @@ public class HomeController {
             modelMap.addAttribute("tbspace",dbConnService.getTBSpaceUtilization(DBName));
 
             //Sync to get Bufferpool Usae and Info
-            modelMap.addAttribute("bpfs",dbConnService.getBpfHitRation(DBName));
+            modelMap.addAttribute("bpfs",dbConnService.getBpfHitRation(DBName,StartTime,EndTime));
         }
         modelMap.addAttribute("BaseInfo",BaseInfo);
         return "Home/DBReport";

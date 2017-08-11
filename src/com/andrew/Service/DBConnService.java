@@ -37,7 +37,7 @@ public class DBConnService {
             "  POOL_TEMP_INDEX_L_READS,POOL_TEMP_INDEX_P_READS,CAST(1-(Pool_Data_P_Reads+Pool_Index_P_Reads+Pool_Temp_Data_P_Reads+Pool_Temp_Index_P_Reads)/(Pool_Data_L_Reads+Pool_Index_L_Reads+Pool_Temp_Data_L_Reads+Pool_Temp_Index_L_Reads+1) AS DECIMAL(5,2)) AS BP_HIT_RATIO,BP_CUR_BUFFSZ,PAGESIZE,SELF_TUNING_ENABLED" +
             " FROM (" +
             "SELECT *,ROW_NUMBER() OVER (PARTITION BY DBCONN_ID,BP_NAME ORDER BY COLLECTED DESC ) RN FROM IBM_DSM_VIEWS.MON_GET_BUFFERPOOL" +
-            " WHERE DBCONN_ID=? AND COLLECTED+ 8 HOURS >CURRENT TIMESTAMP - 10 DAYS" +
+            " WHERE DBCONN_ID=? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
             ")  WHERE RN=1";
 
 
@@ -102,8 +102,8 @@ public class DBConnService {
      * @param dbname 数据库名
      * @return
      */
-    public List<Map<String,Object>> getBpfHitRation(String dbname){
-        return jdbcTemplate.queryForList(this.SELECT_BPF_HIT_RATION,dbname);
+    public List<Map<String,Object>> getBpfHitRation(String dbname,String startTime, String endTime){
+        return jdbcTemplate.queryForList(this.SELECT_BPF_HIT_RATION,dbname,startTime,endTime);
     }
 
     public Map<String, Object[]> getRSPT(String dbname, String startTime, String endTime){
