@@ -40,9 +40,9 @@ public class SshService {
             sshConnection.connect();
             sshConnection.authenticateWithPassword(username,passwd);
             SCPClient scpClient=sshConnection.createSCPClient();
-            logger.info("Begin to Transfer File to Remote:"+fullPath);
+            logger.info("["+host+"] Begin to Transfer File to Remote:"+fullPath);
             scpClient.put(fullPath,target);
-            logger.info("Complete Transfer File to Remote:"+fullPath);
+            logger.info("["+host+"] Complete Transfer File to Remote:"+fullPath);
         } catch (Exception e1) {
             logger.error(e1.getMessage());
             return false;

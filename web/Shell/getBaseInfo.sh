@@ -22,7 +22,6 @@ if [ -f /etc/SuSE-release ];then
    swapsize=$(echo "${freem}"|awk '$1~/Swap/{print $2}');
    swapfree=$(echo "${freem}"|awk '$1~/Swap/{print $4}');
    cpusize=$(grep processor /proc/cpuinfo|wc -l);
-
 elif [ -f /etc/redhat-release ];then
    ##Get Full OSLevel
    OSType="RHEL";

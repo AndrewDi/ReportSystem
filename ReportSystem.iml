@@ -31,6 +31,6 @@
     <orderEntry type="library" name="db2jcc" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:22.0" level="project" />
     <orderEntry type="library" name="jstl" level="project" />
-    <orderEntry type="library" name="org.codehaus.jackson:jackson-mapper-asl:1.9.0" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.9.0" level="project" />
   </component>
 </module>

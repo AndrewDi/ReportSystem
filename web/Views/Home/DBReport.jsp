@@ -14,6 +14,8 @@
 <head>
     <jsp:include page="../Common/include.jsp"/>
     <script src="/Javascript/echarts.js"></script>
+    <script src="/Javascript/infographic.js"></script>
+    <link href="/Css/chartsReport.css" rel="stylesheet"></link>
     <title>数据库巡检报告</title>
 </head>
 <body>
@@ -91,7 +93,7 @@
                             <td>${fs[3]}</td>
                             <td>${fs[4]}</td>
                             <td>${fs[5]}</td>
-                            <th>True</th>
+                            <td>True</td>
                             </tr>
                         </c:when>
                         <c:otherwise>
@@ -102,7 +104,7 @@
                             <td>${fs[3]}</td>
                             <td>${fs[4]}</td>
                             <td>${fs[5]}</td>
-                            <th>False</th>
+                            <td>False</td>
                             </tr>
                         </c:otherwise>
                     </c:choose>
@@ -253,93 +255,160 @@
         </div>
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
-                3) 数据库平均每秒事物数目：
+                3) 数据库平均每秒事物响应时间：
             </div>
         </div>
         <div class="row">
-            <div id="rspt" style="height: 400px;padding: 10px;"/>
+            <div class="col-md-12 chartCaption">说明：数据库事务平均响应时间是衡量数据库性能和吞吐量的一个重要指标，下图中单位为ms，典型的高性能OLTP数据库的事务平均响应时间应处于100ms以下</div>
+            <div id="rsptChart" class="chartDiv"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                4) 数据库平均每秒事物数目：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：在数据库事务平均响应时间比较稳定的情况下，数据库平均每秒事务数的多少就能直接反应数据库的繁忙程度</div>
+            <div id="tpsChart" class="chartDiv" ></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                5) 数据库表空间使用率：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：数据库当前活动连接数量在OLTP类型数据库中应该是保持一个比较低的水平，虽然数据库中可能存在上百个连接，但是由于都是短而快的事务，所以能够抓取到的当前活动连接数量是比较低的</div>
+            <div id="concurrentChart" class="chartDiv" ></div>
         </div>
     </div>
 </div>
 <jsp:include page="../Common/bottom.jsp"/>
 <script type="text/javascript">
 
-    var rsptChart = echarts.init(document.getElementById('rspt'));
+    function rander(divid,data,title,ytitle) {
 
-    rsptoption = {
-        title : {
-            text: '数据库事务平均响应时间'
-        },
-        tooltip : {
-            trigger: 'axis'
-        },
-        legend: {
-            data:['RSPT']
-        },
-        toolbox: {
-            show : true,
-            feature : {
-                mark : {show: true},
-                dataView : {show: true, readOnly: false},
-                magicType : {show: true, type: ['line']},
-                restore : {show: true},
-                saveAsImage : {show: true}
-            }
-        },
-        calculable : true,
-        xAxis : [
-            {
-                type : 'category',
-                boundaryGap : false,
-                data : ['周一','周二','周三','周四','周五','周六','周日']
-            }
-        ],
-        yAxis : [
-            {
-                type : 'value',
-                axisLabel : {
-                    formatter: '{value} °C'
-                }
-            }
-        ],
-        series : [
-            {
-                name:'最高气温',
-                type:'line',
-                data:[11, 11, 15, 13, 12, 13, 10],
-                markPoint : {
-                    data : [
-                        {type : 'max', name: '最大值'},
-                        {type : 'min', name: '最小值'}
-                    ]
-                },
-                markLine : {
-                    data : [
-                        {type : 'average', name: '平均值'}
-                    ]
+        var chart = echarts.init(document.getElementById(divid),'infographic');
+        var option = {
+            title : {
+                text: title
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:data.xaxis
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: true},
+                    magicType : {show: true, type: ['line','bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
                 }
             },
-            {
-                name:'最低气温',
-                type:'line',
-                data:[1, -2, 2, 5, 3, 2, 0],
-                markPoint : {
-                    data : [
-                        {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
-                    ]
-                },
-                markLine : {
-                    data : [
-                        {type : 'average', name : '平均值'}
-                    ]
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : data.xaxis,
+                    name : '时间轴',
+                    axisTick : {
+                        show:true,
+                        interval : 5
+                    }
                 }
-            }
-        ]
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLabel : {
+                        formatter: '{value}'
+                    },
+                    axisLine : {    // 轴线
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed',
+                            width: 2
+                        }
+                    }
+                }
+            ],
+            series : [
+                {
+                    name:ytitle,
+                    type:'line',
+                    data:data.yaxis,
+                    axisLine : {
+                        show: true,
+                        lineStyle: {
+                            type: 'dashed',
+                            width: 2
+                        }
+                    },
+                    axisTick : {    // 轴标记
+                        show:true,
+                        length: 10,
+                        lineStyle: {
+                            color: 'green',
+                            type: 'solid',
+                            width: 2
+                        }
+                    }
+                }
+            ]
+        };
+        chart.setOption(option);
+
+        window.addEventListener('resize', function () {
+            chart.resize();
+        });
     };
 
-    // 使用刚指定的配置项和数据显示图表。
-    rsptChart.setOption(rsptoption);
-    window.onresize  = rsptChart.resize;
+    function getParms() {
+        var query=location.search.substring(1);
+        return query;
+    }
+    $(document).ready(function () {
+        $.ajax({
+            url:'/Home/getrspt?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander('rsptChart',data,'数据库事务平均响应时间','RSPT');
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+        $.ajax({
+            url:'/Home/gettps?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander('tpsChart',data,'数据库平均每秒事务数','TPS');
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+        $.ajax({
+            url:'/Home/getconcurrent?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander('concurrentChart',data,'数据库并发执行应用数量','并发执行数量');
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+    });
 </script>
 </body>
 </html>

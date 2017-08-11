@@ -1,12 +1,14 @@
 package com.andrew.Service;
 
-import com.andrew.Model.DBConnModel;
+import com.andrew.Common.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +28,9 @@ public class DBConnService {
             "LEFT JOIN IBM_RTMON_METADATA.RTMON_MAP_DBCONN ON (DB.DATABASE_NAME)=(DBCONN_ID) WHERE DB.DATABASE_NAME=? ORDER BY DBCONN_INT FETCH FIRST 1 ROWS ONLY";
 
 
-    private String SELECT_TBSPACE_UTILIZATION="SELECT TBSP_NAME,TBSP_TYPE,TBSP_STATE,TBSP_TOTAL_SIZE_KB,TBSP_USED_SIZE_KB,TBSP_FREE_SIZE_KB,TBSP_UTILIZATION_PERCENT,TBSP_AUTO_RESIZE_ENABLED,TBSP_MAX_SIZE " +
-            "FROM HEALTHMETRICS.TBSPACE_UTILIZATION WHERE DATABASE_NAME=? ORDER BY TBSP_NAME DESC,TBSP_TYPE";
+    private String SELECT_TBSPACE_UTILIZATION="SELECT TBSP_NAME,TBSP_TYPE,TBSP_STATE,TBSP_TOTAL_SIZE_KB,TBSP_USED_SIZE_KB,TBSP_FREE_SIZE_KB,TBSP_UTILIZATION_PERCENT,TBSP_AUTO_RESIZE_ENABLED,TBSP_MAX_SIZE" +
+            " FROM (SELECT *,ROW_NUMBER() OVER (PARTITION BY DATABASE_NAME,TBSP_ID ORDER BY SNAPSHOT_TIME DESC) RN FROM HEALTHMETRICS.TBSPACE_UTILIZATION) " +
+            " WHERE RN=1 AND DATABASE_NAME=? ORDER BY TBSP_NAME DESC,TBSP_TYPE";
 
 
     private String SELECT_BPF_HIT_RATION="SELECT BP_NAME,POOL_DATA_L_READS,POOL_DATA_P_READS,POOL_INDEX_L_READS,POOL_INDEX_P_READS,POOL_TEMP_DATA_L_READS,POOL_TEMP_DATA_P_READS," +
@@ -38,8 +41,7 @@ public class DBConnService {
             ")  WHERE RN=1";
 
 
-    private String SELECT_DSM_RSPT="SELECT DBCONN_ID," +
-            "       COLLECTED + 8 HOURS AS SNAPTIME," +
+    private String SELECT_DSM_RSPT="SELECT COLLECTED + 8 HOURS AS SNAPTIME," +
             "       CAST (" +
             "            TOTAL_ACT_TIME_DELTA" +
             "          * 1.0" +
@@ -47,11 +49,22 @@ public class DBConnService {
             "                    0," +
             "                    1," +
             "                    TOTAL_APP_COMMITS_DELTA + TOTAL_APP_ROLLBACKS_DELTA) AS DECIMAL (8, 3))" +
-            "          AS RSPT" +
+            "          AS yaxis" +
             "  FROM IBM_DSM_VIEWS.THROUGHPUT_ALL" +
             " WHERE    DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
             "ORDER BY DBCONN_ID, COLLECTED ASC";
 
+
+    private String SELECT_DSM_TPS="SELECT COLLECTED + 8 HOURS AS SNAPTIME," +
+            "         (TOTAL_APP_COMMITS_DELTA + TOTAL_APP_ROLLBACKS_DELTA)/(DELTA_MSEC/1000) AS TPS" +
+            "  FROM IBM_DSM_VIEWS.THROUGHPUT_ALL" +
+            "  WHERE   DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
+            "ORDER BY DBCONN_ID, COLLECTED ASC";
+
+    private String SELECT_DSM_CONCURRENT_USED="SELECT COLLECTED + 8 HOURS AS SNAPTIME,NUM_ACTIVE_SESSIONS" +
+            "  FROM IBM_DSM_VIEWS.DB_SUMMARY_SESSIONS" +
+            "  WHERE    DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
+            " ORDER BY DBCONN_ID, COLLECTED ASC";
     /**
      * Get ALL DBConn From DSM Repo Database
      * @return list of DBConns
@@ -93,7 +106,18 @@ public class DBConnService {
         return jdbcTemplate.queryForList(this.SELECT_BPF_HIT_RATION,dbname);
     }
 
-    public List<Map<String,Object>> getRSPT(String dbname,String startTime,String endTime){
-        return jdbcTemplate.queryForList(this.SELECT_DSM_RSPT,dbname,startTime,endTime);
+    public Map<String, Object[]> getRSPT(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_RSPT,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getTPS(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_TPS,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getConCurrent(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_CONCURRENT_USED,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
     }
 }

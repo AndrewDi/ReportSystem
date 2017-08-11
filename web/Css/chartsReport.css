@@ -1,0 +1,11 @@
+.chartDiv{
+    height: 400px;
+    padding: 10px;
+}
+
+.chartCaption {
+    color: #777;
+    font-size: 16px;
+    padding-bottom: 8px;
+    padding-top: 8px;
+}

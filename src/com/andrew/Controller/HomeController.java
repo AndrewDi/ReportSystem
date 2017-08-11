@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/Home")
@@ -83,9 +82,29 @@ public class HomeController {
 
 
     @RequestMapping("getrspt")
-    public @ResponseBody List<Map<String,Object>> getRSPT(@RequestParam(value = "DBName",required = true) String DBName,
-                                                          @RequestParam(value = "StartTime",required = true) String StartTime,
-                                                          @RequestParam(value = "EndTime",required = true) String EndTime){
+    public @ResponseBody
+    Map<String, Object[]> getRSPT(@RequestParam(value = "DBName",required = true) String DBName,
+                                            @RequestParam(value = "StartTime",required = true) String StartTime,
+                                            @RequestParam(value = "EndTime",required = true) String EndTime){
+
         return this.dbConnService.getRSPT(DBName,StartTime,EndTime);
+    }
+
+    @RequestMapping("gettps")
+    public @ResponseBody
+    Map<String, Object[]> getTPS(@RequestParam(value = "DBName",required = true) String DBName,
+                                  @RequestParam(value = "StartTime",required = true) String StartTime,
+                                  @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getTPS(DBName,StartTime,EndTime);
+    }
+
+    @RequestMapping("getconcurrent")
+    public @ResponseBody
+    Map<String, Object[]> getConCurrent(@RequestParam(value = "DBName",required = true) String DBName,
+                                 @RequestParam(value = "StartTime",required = true) String StartTime,
+                                 @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getConCurrent(DBName,StartTime,EndTime);
     }
 }
