@@ -407,83 +407,33 @@
         });
     };
 
+    function chartAjax(divid,type,title,ytitle) {
+        $.ajax({
+            url:'/Home/'+type+'?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander(divid,data,title,ytitle);
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+    }
+
     function getParms() {
         var query=location.search.substring(1);
         return query;
     }
-    $(document).ready(function () {
-        $.ajax({
-            url:'/Home/getrspt?'+getParms(),
-            async : true,
-            type:'post',
-            dataType:'json',
-            success:function (data) {
-                rander('rsptChart',data,'数据库事务平均响应时间','RSPT');
-            },
-            error:function (msg) {
-                alert(msg);
-            }
-        });
-        $.ajax({
-            url:'/Home/gettps?'+getParms(),
-            async : true,
-            type:'post',
-            dataType:'json',
-            success:function (data) {
-                rander('tpsChart',data,'数据库平均每秒事务数','TPS');
-            },
-            error:function (msg) {
-                alert(msg);
-            }
-        });
-        $.ajax({
-            url:'/Home/getconcurrent?'+getParms(),
-            async : true,
-            type:'post',
-            dataType:'json',
-            success:function (data) {
-                rander('concurrentChart',data,'数据库并发执行应用数量','并发执行数量');
-            },
-            error:function (msg) {
-                alert(msg);
-            }
-        });
-        $.ajax({
-            url:'/Home/getavglogreads?'+getParms(),
-            async : true,
-            type:'post',
-            dataType:'json',
-            success:function (data) {
-                rander('avgLogReadsChart',data,'数据库平均每秒逻辑读行数','数据库每秒逻辑读');
-            },
-            error:function (msg) {
-                alert(msg);
-            }
-        });
-        $.ajax({
-            url:'/Home/getavglockwaittime?'+getParms(),
-            async : true,
-            type:'post',
-            dataType:'json',
-            success:function (data) {
-                rander('avgLockWaitTimeChart',data,'数据库平均锁等待时间','数据库平均锁等待时间');
-            },
-            error:function (msg) {
-                alert(msg);
-            }
-        });
-        $.ajax({
-            url:'/Home/getlockescals?'+getParms(),
-            async : true,
-            type:'post',
-            dataType:'json',
-            success:function (data) {
-                rander('lockEscalsChart',data,'数据库锁升级情况','数据库锁升级次数');
-            },
-            error:function (msg) {
-                alert(msg);
-            }
-        });
+
+    $(function () {
+        chartAjax('rsptChart','getrspt','数据库事务平均响应时间','RSPT');
+        chartAjax('tpsChart','gettps','数据库平均每秒事务数','TPS');
+        chartAjax('concurrentChart','getconcurrent','数据库并发执行应用数量','并发执行数量');
+        chartAjax('avgLogReadsChart','getavglogreads','数据库平均每秒逻辑读行数','数据库每秒逻辑读');
+        chartAjax('avgLockWaitTimeChart','getavglockwaittime','数据库平均锁等待时间','数据库平均锁等待时间');
+        chartAjax('lockEscalsChart','getlockescals','数据库锁升级情况','数据库锁升级次数');
     });
 </script>
 </body>
