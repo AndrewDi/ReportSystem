@@ -312,9 +312,8 @@
 <jsp:include page="../Common/bottom.jsp"/>
 <script type="text/javascript">
 
-    function rander(divid,data,title,ytitle) {
+    function rander(chart,data,title,ytitle) {
 
-        var chart = echarts.init(document.getElementById(divid),'infographic');
         var option = {
             title : {
                 text: title,
@@ -408,13 +407,16 @@
     };
 
     function chartAjax(divid,type,title,ytitle) {
+        var chart = echarts.init(document.getElementById(divid),'infographic');
+        chart.showLoading();
         $.ajax({
             url:'/Home/'+type+'?'+getParms(),
             async : true,
             type:'post',
             dataType:'json',
             success:function (data) {
-                rander(divid,data,title,ytitle);
+                chart.hideLoading();
+                rander(chart,data,title,ytitle);
             },
             error:function (msg) {
                 alert(msg);
