@@ -52,19 +52,30 @@ public class DBConnService {
             "          AS yaxis" +
             "  FROM IBM_DSM_VIEWS.THROUGHPUT_ALL" +
             " WHERE    DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
-            "ORDER BY DBCONN_ID, COLLECTED ASC";
+            "ORDER BY COLLECTED ASC";
 
 
     private String SELECT_DSM_TPS="SELECT COLLECTED + 8 HOURS AS SNAPTIME," +
             "         (TOTAL_APP_COMMITS_DELTA + TOTAL_APP_ROLLBACKS_DELTA)/(DELTA_MSEC/1000) AS TPS" +
             "  FROM IBM_DSM_VIEWS.THROUGHPUT_ALL" +
             "  WHERE   DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
-            "ORDER BY DBCONN_ID, COLLECTED ASC";
+            "ORDER BY COLLECTED ASC";
 
     private String SELECT_DSM_CONCURRENT_USED="SELECT COLLECTED + 8 HOURS AS SNAPTIME,NUM_ACTIVE_SESSIONS" +
             "  FROM IBM_DSM_VIEWS.DB_SUMMARY_SESSIONS" +
-            "  WHERE    DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
-            " ORDER BY DBCONN_ID, COLLECTED ASC";
+            "  WHERE  DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
+            " ORDER BY COLLECTED ASC";
+
+    private String SELECT_DSM_AVG_LOGICAL_READS="SELECT COLLECTED+8 HOURS as SNAPTIME,LOGICAL_READS_DELTA/DELTA_MSEC AS AVG_READ FROM IBM_DSM_VIEWS.THROUGHPUT_ALL WHERE " +
+            "  DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? ORDER BY COLLECTED ASC";
+
+    private String SELECT_DSM_AVG_LOCK_WAIT_TIME="SELECT COLLECTED+8 HOURS as SNAPTIME,LOCK_WAIT_TIME_DELTA/(TOTAL_APP_COMMITS_DELTA + TOTAL_APP_ROLLBACKS_DELTA+1) AS AVG_LOCK_WAIT_TIME FROM IBM_DSM_VIEWS.THROUGHPUT_ALL WHERE " +
+            "  DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? ORDER BY COLLECTED ASC";
+
+    private String SELECT_DSM_LOCK_ESCALS="SELECT COLLECTED+8 HOURS as SNAPTIME,LOCK_ESCALS_DELTA FROM IBM_DSM_VIEWS.THROUGHPUT_ALL WHERE " +
+            "  DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? ORDER BY COLLECTED ASC";
+
+
     /**
      * Get ALL DBConn From DSM Repo Database
      * @return list of DBConns
@@ -118,6 +129,21 @@ public class DBConnService {
 
     public Map<String, Object[]> getConCurrent(String dbname, String startTime, String endTime){
         List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_CONCURRENT_USED,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getAvgLogReads(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_AVG_LOGICAL_READS,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getAvgLockWaitTime(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_AVG_LOCK_WAIT_TIME,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getLockEscals(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_LOCK_ESCALS,dbname,startTime,endTime);
         return ArrayUtils.listToMap(datas);
     }
 }

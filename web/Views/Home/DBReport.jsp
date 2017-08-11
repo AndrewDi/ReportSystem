@@ -228,8 +228,8 @@
                 <tbody>
                 <c:forEach var="bp" items="${bpfs}">
                 <c:choose>
-                    <c:when test="${bp.BP_HIT_RATIO<0.75}">
-                        <tr class="warn">
+                    <c:when test="${bp.BP_HIT_RATIO<0.75||bp.SELF_TUNING_ENABLED==1}">
+                        <tr class="danger">
                     </c:when>
                     <c:otherwise>
                         <tr class="info">
@@ -241,7 +241,7 @@
                     <td>${bp.SELF_TUNING_ENABLED==1? 'Enable':'Disable'}</td>
                     <td>${bp.BP_HIT_RATIO}</td>
                     <c:choose>
-                        <c:when test="${bp.BP_HIT_RATIO<0.75}">
+                        <c:when test="${bp.BP_HIT_RATIO<0.75||bp.SELF_TUNING_ENABLED==1}">
                             <td>False</td>
                         </c:when>
                     <c:otherwise>
@@ -279,6 +279,33 @@
         <div class="row">
             <div class="col-md-12 chartCaption">说明：数据库当前活动连接数量在OLTP类型数据库中应该是保持一个比较低的水平，虽然数据库中可能存在上百个连接，但是由于都是短而快的事务，所以能够抓取到的当前活动连接数量是比较低的</div>
             <div id="concurrentChart" class="chartDiv" ></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699;padding-top: 20px">
+            6) 数据库平均每秒逻辑读行数：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：数据库平均每秒逻辑读反应的数据库的繁忙程度</div>
+            <div id="avgLogReadsChart" class="chartDiv" ></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                7) 数据库平均锁等待时间：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：数据库平均锁等待时间反应数据库整体的锁等待情况</div>
+            <div id="avgLockWaitTimeChart" class="chartDiv" ></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                8) 数据库锁升级情况：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：数据库锁升级反映了数据库是否发生过严重锁升级情况</div>
+            <div id="lockEscalsChart" class="chartDiv" ></div>
         </div>
     </div>
 </div>
@@ -416,6 +443,42 @@
             dataType:'json',
             success:function (data) {
                 rander('concurrentChart',data,'数据库并发执行应用数量','并发执行数量');
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+        $.ajax({
+            url:'/Home/getavglogreads?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander('avgLogReadsChart',data,'数据库平均每秒逻辑读行数','数据库每秒逻辑读');
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+        $.ajax({
+            url:'/Home/getavglockwaittime?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander('avgLockWaitTimeChart',data,'数据库平均锁等待时间','数据库平均锁等待时间');
+            },
+            error:function (msg) {
+                alert(msg);
+            }
+        });
+        $.ajax({
+            url:'/Home/getlockescals?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            success:function (data) {
+                rander('lockEscalsChart',data,'数据库锁升级情况','数据库锁升级次数');
             },
             error:function (msg) {
                 alert(msg);

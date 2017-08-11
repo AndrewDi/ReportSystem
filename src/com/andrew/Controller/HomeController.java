@@ -107,4 +107,31 @@ public class HomeController {
 
         return this.dbConnService.getConCurrent(DBName,StartTime,EndTime);
     }
+
+    @RequestMapping("getavglogreads")
+    public @ResponseBody
+    Map<String, Object[]> getAvgLogReads(@RequestParam(value = "DBName",required = true) String DBName,
+                                        @RequestParam(value = "StartTime",required = true) String StartTime,
+                                        @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getAvgLogReads(DBName,StartTime,EndTime);
+    }
+
+    @RequestMapping("getavglockwaittime")
+    public @ResponseBody
+    Map<String, Object[]> getAvgLockWaitTime(@RequestParam(value = "DBName",required = true) String DBName,
+                                         @RequestParam(value = "StartTime",required = true) String StartTime,
+                                         @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getAvgLockWaitTime(DBName,StartTime,EndTime);
+    }
+
+    @RequestMapping("getlockescals")
+    public @ResponseBody
+    Map<String, Object[]> getLockEscals(@RequestParam(value = "DBName",required = true) String DBName,
+                                             @RequestParam(value = "StartTime",required = true) String StartTime,
+                                             @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getLockEscals(DBName,StartTime,EndTime);
+    }
 }
