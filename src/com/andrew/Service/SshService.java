@@ -132,11 +132,11 @@ public class SshService {
                     this.sshCommand("rm -f /tmp/script/"+shellName,stringBuffer,host,username,passwd);
                     return stringBuffer.toString();
                 }
-                stringBuffer.append("execute command failed");
+                stringBuffer.append("execute command failed\n");
             }
-            stringBuffer.append("scp file failed");
+            stringBuffer.append("scp file failed\n");
         }
-        stringBuffer.append("can not make temporary script directory");
+        stringBuffer.append("can not make temporary script directory\n");
         return stringBuffer.toString();
     }
 }
