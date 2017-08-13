@@ -12,12 +12,12 @@
           <element id="library" level="project" name="Spring MVC-4.3.9.RELEASE" />
           <element id="library" level="project" name="org.logback-extensions:logback-ext-spring:0.1.4" />
           <element id="library" level="project" name="org.slf4j:jcl-over-slf4j:1.7.25" />
-          <element id="library" level="project" name="com.trilead:trilead-ssh2:1.0.0-build220" />
+          <element id="library" level="project" name="com.trilead:trilead-ssh2:Latest" />
           <element id="library" level="project" name="com.alibaba:druid:1.1.2" />
           <element id="library" level="project" name="db2jcc" />
-          <element id="library" level="project" name="com.google.guava:guava:22.0" />
           <element id="library" level="project" name="jstl" />
           <element id="library" level="project" name="jackson-annotations-2.9.0" />
+          <element id="library" level="project" name="com.googlecode.aviator:aviator:3.1.0" />
         </element>
       </element>
     </root>

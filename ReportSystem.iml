@@ -26,11 +26,11 @@
     <orderEntry type="library" name="Spring MVC-4.3.9.RELEASE" level="project" />
     <orderEntry type="library" name="org.logback-extensions:logback-ext-spring:0.1.4" level="project" />
     <orderEntry type="library" name="org.slf4j:jcl-over-slf4j:1.7.25" level="project" />
-    <orderEntry type="library" name="com.trilead:trilead-ssh2:1.0.0-build220" level="project" />
+    <orderEntry type="library" name="com.trilead:trilead-ssh2:Latest" level="project" />
     <orderEntry type="library" name="com.alibaba:druid:1.1.2" level="project" />
     <orderEntry type="library" name="db2jcc" level="project" />
-    <orderEntry type="library" name="com.google.guava:guava:22.0" level="project" />
     <orderEntry type="library" name="jstl" level="project" />
     <orderEntry type="library" name="jackson-annotations-2.9.0" level="project" />
+    <orderEntry type="library" name="com.googlecode.aviator:aviator:3.1.0" level="project" />
   </component>
 </module>
