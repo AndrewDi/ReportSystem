@@ -333,7 +333,22 @@
             <div class="col-md-6"  style="color: #336699">
                 1) 平均执行时间前20的SQL：
             </div>
-            <div class="col-md-12 chartCaption">说明：按照一段时间内SQL的执行情况进行倒序排序，排名前20的SQL如下</div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <caption>说明：按照一段时间内SQL的执行情况进行倒序排序，排名前20的SQL如下</caption>
+                <thead>
+                <tr>
+                    <th>SNAPTIME</th>
+                    <th>NUM_EXECS</th>
+                    <th>AVG_EXEC_TIME</th>
+                    <th>AVG_ROW_READ</th>
+                    <th>SQL_TEXT</th>
+                </tr>
+                </thead>
+                <tbody id="topSlowSqlTbody">
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
