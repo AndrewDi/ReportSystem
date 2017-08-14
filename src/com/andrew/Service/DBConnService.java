@@ -76,6 +76,32 @@ public class DBConnService {
             "  DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? ORDER BY COLLECTED ASC";
 
 
+    private String SELECT_DSM_TOP_SLOW_SQL="SELECT SNAPTIME,NUM_EXEC_WITH_METRICS,AVG_EXEC_TIME,AVG_ROW_READ,AVG_ROW_RETURNED,SQL_TEXT FROM (\n" +
+            "  SELECT\n" +
+            "    *,\n" +
+            "    ROW_NUMBER()\n" +
+            "    OVER (\n" +
+            "      PARTITION BY SQL_HASH_ID\n" +
+            "      ORDER BY AVG_EXEC_TIME DESC ) AS RN\n" +
+            "  FROM (\n" +
+            "    SELECT\n" +
+            "      COLLECTED + 8 HOURS                                AS SNAPTIME,\n" +
+            "      NUM_EXEC_WITH_METRICS,\n" +
+            "      STMT_EXEC_TIME * 1.0 /DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_EXEC_TIME,\n" +
+            "      ROWS_READ/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_ROW_READ,\n" +
+            "      ROWS_RETURNED/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_ROW_RETURNED,\n" +
+            "      LOGICAL_READS/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_LOGICAL_READS,\n" +
+            "      PHYSICAL_READS/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_PHYSICAL_READS,\n" +
+            "      LOCK_WAIT_TIME/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_LOCK_WAIT_TIME,\n" +
+            "      SQL_TEXT,\n" +
+            "      IBMOTS.SQL_FACT.SQL_HASH_ID\n" +
+            "    FROM IBMOTS.SQL_FACT\n" +
+            "      LEFT JOIN IBMOTS.SQL_DIM ON (IBMOTS.SQL_DIM.SQL_HASH_ID = IBMOTS.SQL_FACT.SQL_HASH_ID)\n" +
+            "    WHERE SYSTEM_QUERY=0 AND DBCONN_INT =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
+            "  )\n" +
+            ") WHERE RN=1 AND NUM_EXEC_WITH_METRICS>20 ORDER BY AVG_EXEC_TIME DESC,NUM_EXEC_WITH_METRICS DESC\n" +
+            "FETCH FIRST 20 ROWS ONLY";
+
     /**
      * Get ALL DBConn From DSM Repo Database
      * @return list of DBConns
@@ -144,6 +170,11 @@ public class DBConnService {
 
     public Map<String, Object[]> getLockEscals(String dbname, String startTime, String endTime){
         List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_LOCK_ESCALS,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String,Object[]> getTopSlowSql(int dbconnid, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_TOP_SLOW_SQL,dbconnid,startTime,endTime);
         return ArrayUtils.listToMap(datas);
     }
 }

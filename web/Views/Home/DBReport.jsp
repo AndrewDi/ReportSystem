@@ -152,6 +152,27 @@
                 4) 实例用户limit设置检查：
             </div>
         </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <caption>说明：</caption>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Soft</th>
+                    <th>Hard</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="ulimit" items="${ulimits}">
+                    <tr>
+                        <td>${ulimit[0]}</td>
+                        <td>${ulimit[1]}</td>
+                        <td>${ulimit[2]}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
         <h3 class="sub-header" style="color: #336699">2、数据库检查</h3>
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
@@ -307,6 +328,13 @@
             <div class="col-md-12 chartCaption">说明：数据库锁升级反映了数据库是否发生过严重锁升级情况</div>
             <div id="lockEscalsChart" class="chartDiv" ></div>
         </div>
+        <h3 class="sub-header" style="color: #336699">3、数据库Top SQL</h3>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                1) 平均执行时间前20的SQL：
+            </div>
+            <div class="col-md-12 chartCaption">说明：按照一段时间内SQL的执行情况进行倒序排序，排名前20的SQL如下</div>
+        </div>
     </div>
 </div>
 <jsp:include page="../Common/bottom.jsp"/>
@@ -406,11 +434,11 @@
         });
     };
 
-    function chartAjax(divid,type,title,ytitle) {
+    function chartAjax(divid,url,title,ytitle) {
         var chart = echarts.init(document.getElementById(divid),'infographic');
         chart.showLoading();
         $.ajax({
-            url:'/Home/'+type+'?'+getParms(),
+            url:url+'?'+getParms(),
             async : true,
             type:'post',
             dataType:'json',
@@ -430,12 +458,12 @@
     }
 
     $(function () {
-        chartAjax('rsptChart','getrspt','数据库事务平均响应时间','RSPT');
-        chartAjax('tpsChart','gettps','数据库平均每秒事务数','TPS');
-        chartAjax('concurrentChart','getconcurrent','数据库并发执行应用数量','并发执行数量');
-        chartAjax('avgLogReadsChart','getavglogreads','数据库平均每秒逻辑读行数','数据库每秒逻辑读');
-        chartAjax('avgLockWaitTimeChart','getavglockwaittime','数据库平均锁等待时间','数据库平均锁等待时间');
-        chartAjax('lockEscalsChart','getlockescals','数据库锁升级情况','数据库锁升级次数');
+        chartAjax('rsptChart','/Home/getrspt','数据库事务平均响应时间','RSPT');
+        chartAjax('tpsChart','/Home/gettps','数据库平均每秒事务数','TPS');
+        chartAjax('concurrentChart','/Home/getconcurrent','数据库并发执行应用数量','并发执行数量');
+        chartAjax('avgLogReadsChart','/Home/getavglogreads','数据库平均每秒逻辑读行数','数据库每秒逻辑读');
+        chartAjax('avgLockWaitTimeChart','/Home/getavglockwaittime','数据库平均锁等待时间','数据库平均锁等待时间');
+        chartAjax('lockEscalsChart','/Home/getlockescals','数据库锁升级情况','数据库锁升级次数');
     });
 </script>
 </body>

@@ -75,6 +75,10 @@ public class HomeController {
 
             //Sync to get Bufferpool Usae and Info
             modelMap.addAttribute("bpfs",dbConnService.getBpfHitRation(DBName,StartTime,EndTime));
+
+            //Sync to get Ulimit Values
+            String ulimits = sshService.ShScpAndExecOnce("getUlimit.sh",host,remoteUserModel.UserName,remoteUserModel.Passwd);
+            modelMap.addAttribute("ulimits",ArrayUtils.strToList(ulimits));
         }
         modelMap.addAttribute("BaseInfo",BaseInfo);
         return "Home/DBReport";
@@ -133,5 +137,14 @@ public class HomeController {
                                              @RequestParam(value = "EndTime",required = true) String EndTime){
 
         return this.dbConnService.getLockEscals(DBName,StartTime,EndTime);
+    }
+
+    @RequestMapping("gettopslowsql")
+    public @ResponseBody
+    Map<String, Object[]> getTopSlowSql(@RequestParam(value = "DBConnID",required = true) int DBConnINT,
+                                        @RequestParam(value = "StartTime",required = true) String StartTime,
+                                        @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getTopSlowSql(DBConnINT,StartTime,EndTime);
     }
 }

@@ -51,7 +51,7 @@
                             <td>${db.VERSION}</td>
                             <td>${db.INSTANCE_PATH}</td>
                             <td class="text-center">
-                                <a class="btn btn-default" type="button" target="_blank" href="/Home/DBReport?DBName=${db.DATABASE_NAME}&StartTime=2017-08-01-05.00.00&EndTime=2017-08-02-05.00.00">预览报告</a>
+                                <a class="btn btn-default" type="button" target="_blank" href="/Home/DBReport?DBName=${db.DATABASE_NAME}&DBConnID=${db.DBCONN_INT}&StartTime=2017-08-01-05.00.00&EndTime=2017-08-02-05.00.00">预览报告</a>
                                 <button class="btn btn-primary" type="button">下载报告</button>
                             </td>
                         </tr>
