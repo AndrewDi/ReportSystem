@@ -141,7 +141,7 @@ public class HomeController {
 
     @RequestMapping("gettopslowsql")
     public @ResponseBody
-    Map<String, Object[]> getTopSlowSql(@RequestParam(value = "DBConnID",required = true) int DBConnINT,
+    List<Map<String, Object>> getTopSlowSql(@RequestParam(value = "DBConnID",required = true) int DBConnINT,
                                         @RequestParam(value = "StartTime",required = true) String StartTime,
                                         @RequestParam(value = "EndTime",required = true) String EndTime){
 

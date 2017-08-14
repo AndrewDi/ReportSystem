@@ -87,7 +87,7 @@ public class DBConnService {
             "    SELECT\n" +
             "      COLLECTED + 8 HOURS                                AS SNAPTIME,\n" +
             "      NUM_EXEC_WITH_METRICS,\n" +
-            "      STMT_EXEC_TIME * 1.0 /DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_EXEC_TIME,\n" +
+            "      CAST(STMT_EXEC_TIME * 1.0 /DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS DECIMAL(15,2)) AS AVG_EXEC_TIME,\n" +
             "      ROWS_READ/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_ROW_READ,\n" +
             "      ROWS_RETURNED/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_ROW_RETURNED,\n" +
             "      LOGICAL_READS/DECODE(NUM_EXEC_WITH_METRICS,0,1,NUM_EXEC_WITH_METRICS) AS AVG_LOGICAL_READS,\n" +
@@ -173,8 +173,7 @@ public class DBConnService {
         return ArrayUtils.listToMap(datas);
     }
 
-    public Map<String,Object[]> getTopSlowSql(int dbconnid, String startTime, String endTime){
-        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_TOP_SLOW_SQL,dbconnid,startTime,endTime);
-        return ArrayUtils.listToMap(datas);
+    public List<Map<String, Object>> getTopSlowSql(int dbconnid, String startTime, String endTime){
+        return jdbcTemplate.queryForList(this.SELECT_DSM_TOP_SLOW_SQL,dbconnid,startTime,endTime);
     }
 }
