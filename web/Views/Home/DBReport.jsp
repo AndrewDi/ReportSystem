@@ -22,6 +22,7 @@
 <div class="container">
     <div class="row">
         <h1 class="page-header">数据库巡检报告</h1>
+        <small>数据来源时间段：${BaseInfo.startTime}~${BaseInfo.endTime}</small>
         <h3 class="sub-header" style="color: #336699">基本信息</h3>
         <c:if test="${!empty BaseInfo}">
         <div class="row">

@@ -145,6 +145,7 @@
            startTimeInput.attr("disabled","disabled");
        }
     });
+
     $(function () {
         var timePickerOption={
             format: "YYYY-MM-DD-HH.mm.ss",

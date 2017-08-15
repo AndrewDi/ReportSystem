@@ -56,6 +56,8 @@ public class HomeController {
         Map<String,Object> BaseInfo=dbConnService.getDBConnAny(DBName);
         if(BaseInfo!=null){
             String host=BaseInfo.get("HOST").toString();
+            BaseInfo.put("startTime",StartTime);
+            BaseInfo.put("endTime",EndTime);
 
             //Sync to get Remote SSH Username and Passwd for Host
             RemoteUserModel remoteUserModel=remoteUserService.getRemoteUserByHost(host);
