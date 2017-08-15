@@ -74,21 +74,24 @@
             </div>
             <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-sm-12">
                             <label class="checkbox-inline">
-                                <input type="radio" name="dateTimeRadio" id="inlineCheckbox1" value="month"> 近一个月
+                                <input type="radio" name="dateTimeRadio" value="month"> 近一个月
                             </label>
                             <label class="checkbox-inline">
-                                <input type="radio" name="dateTimeRadio" id="inlineCheckbox2" value="week"> 近一周
+                                <input type="radio" name="dateTimeRadio" value="twoweek"> 近两周
                             </label>
                             <label class="checkbox-inline">
-                                <input type="radio" name="dateTimeRadio" id="inlineCheckbox3" value="twoday"> 近两天
+                                <input type="radio" name="dateTimeRadio" value="week"> 近一周
                             </label>
                             <label class="checkbox-inline">
-                                <input type="radio" name="dateTimeRadio" id="inlineCheckbox4" value="day" checked> 近一天
+                                <input type="radio" name="dateTimeRadio" value="twoday"> 近两天
                             </label>
                             <label class="checkbox-inline">
-                                <input type="radio" name="dateTimeRadio" id="inlineCheckbox5" value="manual"> 自定义
+                                <input type="radio" name="dateTimeRadio" value="day" checked> 近一天
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" name="dateTimeRadio" value="manual"> 自定义
                             </label>
                         </div>
                     </div>
@@ -169,6 +172,10 @@
                 break;
             case "month":
                 startTime=moment().subtract(1, 'months').format(dateFormat);
+                endTime=moment().format(dateFormat);
+                break;
+            case "twoweek":
+                startTime=moment().subtract(14, 'days').format(dateFormat);
                 endTime=moment().format(dateFormat);
                 break;
             case "week":
