@@ -91,6 +91,11 @@
                         </property>
                     </bean>
                 </property>
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
@@ -102,15 +107,6 @@
     <mvc:resources mapping="/fonts/**" location="/fonts/" cache-period="0"/>
     <mvc:resources mapping="/Shell/**" location="/Shell/" cache-period="0"/>
 
-    <bean id="jsonDateObjectMapper" class="com.andrew.Common.JsonDateObjectMapper"/>
-    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-        <property name="objectMapper" ref="jsonDateObjectMapper"/>
-        <property name="supportedMediaTypes">
-            <list>
-                <value>application/json;charset=UTF-8</value>
-            </list>
-        </property>
-    </bean>
     <!-- 总错误处理
     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="defaultErrorView">
