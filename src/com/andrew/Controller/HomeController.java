@@ -147,4 +147,22 @@ public class HomeController {
 
         return this.dbConnService.getTopSlowSql(DBConnINT,StartTime,EndTime);
     }
+
+    @RequestMapping("gettoprowsreadsql")
+    public @ResponseBody
+    List<Map<String, Object>> getTopRowsReadSql(@RequestParam(value = "DBConnID",required = true) int DBConnINT,
+                                            @RequestParam(value = "StartTime",required = true) String StartTime,
+                                            @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getTopRowsReadSql(DBConnINT,StartTime,EndTime);
+    }
+
+    @RequestMapping("gettoplockwaitsql")
+    public @ResponseBody
+    List<Map<String, Object>> getTopLockWaitSql(@RequestParam(value = "DBConnID",required = true) int DBConnINT,
+                                                @RequestParam(value = "StartTime",required = true) String StartTime,
+                                                @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getTopLockWaitSql(DBConnINT,StartTime,EndTime);
+    }
 }

@@ -8,14 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>）
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <jsp:include page="../Common/include.jsp"/>
     <script src="/Javascript/echarts.js"></script>
     <script src="/Javascript/infographic.js"></script>
-    <link href="/Css/chartsReport.css" rel="stylesheet"></link>
+    <link href="/Css/chartsReport.css" rel="stylesheet"/>
     <title>数据库巡检报告</title>
 </head>
 <body>
@@ -350,12 +350,55 @@
                 </tbody>
             </table>
         </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                2) 平均逻辑读前20的SQL：
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <caption>说明：按照一段时间内SQL的逻辑读情况进行倒序排序，排名前20的SQL如下</caption>
+                <thead>
+                <tr>
+                    <th>SNAPTIME</th>
+                    <th>NUM_EXECS</th>
+                    <th>AVG_EXEC_TIME</th>
+                    <th>AVG_ROW_READ</th>
+                    <th>SQL_TEXT</th>
+                </tr>
+                </thead>
+                <tbody id="topRowsReadSqlTbody">
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                3) 平均锁等待时间前20的SQL：
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <caption>说明：按照一段时间内SQL的锁等待时间进行倒序排序，排名前20的SQL如下</caption>
+                <thead>
+                <tr>
+                    <th>SNAPTIME</th>
+                    <th>NUM_EXECS</th>
+                    <th>AVG_EXEC_TIME</th>
+                    <th>AVG_LOCK_WAIT_TIME</th>
+                    <th>SQL_TEXT</th>
+                </tr>
+                </thead>
+                <tbody id="topLockWaitSqlTbody">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <jsp:include page="../Common/bottom.jsp"/>
+<script src="/Javascript/heartcode-canvasloader.js"></script>
 <script type="text/javascript">
 
-    function rander(chart,data,title,ytitle) {
+    function render(chart,data,title,ytitle) {
 
         var option = {
             title : {
@@ -451,18 +494,22 @@
 
     function chartAjax(divid,url,title,ytitle) {
         var chart = echarts.init(document.getElementById(divid),'infographic');
-        chart.showLoading();
         $.ajax({
             url:url+'?'+getParms(),
             async : true,
             type:'post',
             dataType:'json',
+            beforeSend:function () {
+                chart.showLoading();
+            },
             success:function (data) {
-                chart.hideLoading();
-                rander(chart,data,title,ytitle);
+                render(chart,data,title,ytitle);
             },
             error:function (msg) {
                 alert(msg);
+            },
+            complete:function (data) {
+                chart.hideLoading();
             }
         });
     }
@@ -472,6 +519,39 @@
         return query;
     }
 
+    function tableAjax(divid,url,cols) {
+        var cl = new CanvasLoader(divid);
+        cl.setColor('#ed2d2d');
+        cl.setDiameter(30);
+        $.ajax({
+            url:url+'?'+getParms(),
+            async : true,
+            type:'post',
+            dataType:'json',
+            beforeSend:function () {
+                cl.show();
+            },
+            success:function (data) {
+                var tbody=window.document.getElementById(divid);
+                var str = "";
+                for(var i in data){
+                    str += "<tr  style='word-break: break-all;font-size: small;'>";
+                    for(var id in cols) {
+                        str += "<td>" + data[i][cols[id]] + "</td>"
+                    }
+                    str += "</tr>";
+                }
+                tbody.innerHTML = str;
+            },
+            error:function (msg) {
+                alert(msg);
+            },
+            complete:function (data) {
+                cl.hide();
+            }
+        });
+    }
+
     $(function () {
         chartAjax('rsptChart','/Home/getrspt','数据库事务平均响应时间','RSPT');
         chartAjax('tpsChart','/Home/gettps','数据库平均每秒事务数','TPS');
@@ -479,6 +559,10 @@
         chartAjax('avgLogReadsChart','/Home/getavglogreads','数据库平均每秒逻辑读行数','数据库每秒逻辑读');
         chartAjax('avgLockWaitTimeChart','/Home/getavglockwaittime','数据库平均锁等待时间','数据库平均锁等待时间');
         chartAjax('lockEscalsChart','/Home/getlockescals','数据库锁升级情况','数据库锁升级次数');
+
+        tableAjax('topSlowSqlTbody','/Home/gettopslowsql',['SNAPTIME','NUM_EXEC_WITH_METRICS','AVG_EXEC_TIME','AVG_ROW_READ','SQL_TEXT']);
+        tableAjax('topRowsReadSqlTbody','/Home/gettoprowsreadsql',['SNAPTIME','NUM_EXEC_WITH_METRICS','AVG_EXEC_TIME','AVG_ROW_READ','SQL_TEXT']);
+        tableAjax('topLockWaitSqlTbody','/Home/gettoplockwaitsql',['SNAPTIME','NUM_EXEC_WITH_METRICS','AVG_EXEC_TIME','AVG_LOCK_WAIT_TIME','SQL_TEXT']);
     });
 </script>
 </body>

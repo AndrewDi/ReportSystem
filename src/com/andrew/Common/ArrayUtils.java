@@ -37,8 +37,7 @@ public class ArrayUtils {
 
         for(Map<String,Object> data:datas)
         {
-            LocalDateTime localDateTime=LocalDateTime.parse(data.values().toArray()[0].toString().substring(0,19), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            xaxis[i] = localDateTime.toLocalDate().toString()+" "+localDateTime.toLocalTime().toString();
+            xaxis[i] = data.values().toArray()[0];
             yaxis[i] = data.values().toArray()[1];
             i++;
         }
