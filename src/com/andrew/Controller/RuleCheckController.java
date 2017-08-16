@@ -1,7 +1,7 @@
 package com.andrew.Controller;
 
 import com.andrew.Model.ParamRuleModel;
-import com.andrew.Service.RuleCheckServices;
+import com.andrew.Service.RuleCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +15,11 @@ import java.util.List;
 public class RuleCheckController {
 
     @Autowired
-    private RuleCheckServices ruleCheckServices;
+    private RuleCheckService ruleCheckService;
 
     @RequestMapping("dbcfgcheck")
     public @ResponseBody
     List<ParamRuleModel> getDBCfgChecked(@RequestParam(value = "DBName",required = true) String DBName){
-        return this.ruleCheckServices.getDBCFGChecked(DBName);
+        return this.ruleCheckService.getDBCFGChecked(DBName);
     }
 }

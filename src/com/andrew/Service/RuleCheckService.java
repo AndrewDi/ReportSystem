@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class RuleCheckServices {
+public class RuleCheckService {
 
     private String SELECT_RULES_BY_TYPE="SELECT ID,TYPE, NAME, RULE, RESULT_TYPE, REQUIRED, FIX_RULE FROM CMDB.PARAM_RULES WHERE TYPE=?";
 
