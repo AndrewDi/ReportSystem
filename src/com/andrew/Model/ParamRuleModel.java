@@ -11,6 +11,7 @@ public class ParamRuleModel {
     private Boolean required;
     private String fixRule;
     private Object evalResult;
+    private String fixResult;
 
     public int getId() {
         return id;
@@ -74,5 +75,13 @@ public class ParamRuleModel {
 
     public void setEvalResult(Object evalResult) {
         this.evalResult = evalResult;
+    }
+
+    public String getFixResult() {
+        return fixResult;
+    }
+
+    public void setFixResult(String fixResult) {
+        this.fixResult = fixResult;
     }
 }

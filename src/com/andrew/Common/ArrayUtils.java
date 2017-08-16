@@ -45,4 +45,5 @@ public class ArrayUtils {
         jsonFormat.put("yaxis",yaxis);
         return jsonFormat;
     }
+
 }
