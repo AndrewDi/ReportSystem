@@ -66,8 +66,14 @@ public class RuleCheckService {
             else {
                 value=param.get("VALUE").toString();
             }
-            if(StringUtils.isNumber(value)&&!value.startsWith("0x")){
-                env.put(String.format("$%s_VALUE", param.get("NAME").toString()),StringUtils.stringToInteger(value));
+            param.replace("NAME",param.get("NAME").toString().replace(".","_").trim());
+            if(StringUtils.isNumber(value)&&!value.startsWith("0x")&&!value.contains("e")){
+                Integer valInteger=StringUtils.stringToInteger(value);
+                if(valInteger!=null){
+                    env.put(String.format("$%s_VALUE", param.get("NAME").toString()), valInteger);
+                }else {
+                    env.put(String.format("$%s_VALUE", param.get("NAME").toString()), value);
+                }
             }
             else {
                 env.put(String.format("$%s_VALUE", param.get("NAME").toString()), value);
@@ -101,7 +107,8 @@ public class RuleCheckService {
             catch (ExpressionSyntaxErrorException synException){
                 rule.setEvalResult(synException.getMessage());
             }
-            rule.setFixResult((String)AviatorEvaluator.execute(rule.getFixRule(),env));
+            if(rule.getFixRule()!=null&&!StringUtils.isEmpty(rule.getFixRule()))
+                rule.setFixResult((String)AviatorEvaluator.execute(rule.getFixRule(),env));
         }
         return rules;
     }

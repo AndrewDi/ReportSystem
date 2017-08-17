@@ -34,6 +34,7 @@
 <script src="/Javascript/bootstrap-table.js"></script>
 <script src="/Javascript/bootstrap-table-zh-CN.js"></script>
 <script src="/Javascript/extensions/export/bootstrap-table-export.js"></script>
+<script src="/Javascript/tableExport.js"></script>
 <script src="/Javascript/extensions/toolbar/bootstrap-table-toolbar.js"></script>
 <script src="/Javascript/extensions/natural-sorting/bootstrap-table-natural-sorting.js"></script>
 <script type="text/javascript">
@@ -41,16 +42,22 @@
         var query=location.search.substring(1);
         return query;
     }
-
-    function buildTable(divid,url) {
+    function getDBName() {
+        var param=getParms();
+        var dbname = param.substring(param.indexOf("=")+1);
+        return dbname;
+    }
+    function buildTable(divid,url,title) {
         var cols=[
             {
                 field : 'id',
-                title : 'ID'
+                title : 'ID',
+                sortable : true
             },
             {
                 field : 'name',
-                title : 'Name'
+                title : 'Name',
+                sortable : true
             },
             {
                 field : 'rule',
@@ -62,17 +69,20 @@
             },
             {
                 field : 'required',
-                title : 'Required'
+                title : 'Required',
+                sortable : true
             },
             {
                 field : 'evalResult',
-                title : 'EvalResult'
+                title : 'EvalResult',
+                sortable : true
             },
             {
                 field : 'fixResult',
                 title : 'Recommand'
             }
         ];
+        $('#'+divid).bootstrapTable('showLoading', null);
         $('#'+divid).bootstrapTable({
             cache: false,
             url: url+'?'+getParms(),
@@ -86,9 +96,13 @@
             pagination : false,
             switchable : true,
             idField : 'id',
-            locale : 'zh-CN',
+            //locale : 'zh-CN',
             showExport: true,
             exportDataType: "all",
+            exportTypes: ['json', 'txt','csv', 'sql', 'excel'],
+            exportOptions: {fileName:title},
+            sortStable:true,
+            sidePagination: 'client',
             pagination: true,
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
@@ -103,13 +117,15 @@
                     strclass = 'warning';
                 }
                 return { classes: strclass }
-            },
+            }
         });
+        $('#'+divid).bootstrapTable('hideLoading', null);
     }
     $(function () {
-        buildTable('dbcfgTable','/Rule/dbcfgcheck');
-        buildTable('dbmcfgTable','/Rule/dbmcfgcheck');
-        buildTable('db2setTable','/Rule/db2setcheck');
+        buildTable('dbcfgTable','/Rule/dbcfgcheck',getDBName()+'.dbcfg');
+        buildTable('dbmcfgTable','/Rule/dbmcfgcheck',getDBName()+'.dbmcfg');
+        buildTable('db2setTable','/Rule/db2setcheck',getDBName()+'.db2set');
+        buildTable('extTable','/Rule/extcheck',getDBName()+'.ext');
     })
 </script>
 </body>

@@ -24,6 +24,28 @@ public class ArrayUtils {
         return arrays;
     }
 
+    public static List<Map<String,Object>> strToMapList(String str){
+        List<Map<String,Object>> arrays=new ArrayList<>();
+        List<String> list = Arrays.asList(str.split("\n"));
+        for (String data:list) {
+            if(StringUtils.isEmpty(data))
+                continue;
+            String[] arrary=data.split("\\|");
+            Map<String,Object> map=new HashMap<>();
+            map.put("NAME",arrary[0].trim());
+            map.put("VALUE",arrary[1].trim());
+            if(arrary.length==2){
+                map.put("VALUE_FLAGS",null);
+            }
+            else {
+                map.put("VALUE_FLAGS",arrary[2].trim());
+            }
+
+            arrays.add(map);
+        }
+        return arrays;
+    }
+
     /**
      * Convert Spring MVC Result Format to ECharts Format
      * @param datas
