@@ -12,6 +12,7 @@ public class ParamRuleModel {
     private String fixRule;
     private Object evalResult;
     private String fixResult;
+    private String params;
 
     public int getId() {
         return id;
@@ -83,5 +84,16 @@ public class ParamRuleModel {
 
     public void setFixResult(String fixResult) {
         this.fixResult = fixResult;
+    }
+
+    public String getParams() {
+        if(this.params==null){
+            return "";
+        }
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
     }
 }

@@ -52,7 +52,7 @@
                             <td>${db.INSTANCE_PATH}</td>
                             <td class="text-center">
                                 <button class="btn btn-default" type="button" data-dbname="${db.DATABASE_NAME}"  data-dbint="${db.DBCONN_INT}" data-toggle="modal" data-target="#dateTimeModal">生成报告</button>
-                                <button class="btn btn-primary" type="button">合规检查</button>
+                                <button class="btn btn-default" type="button" onclick="javascript:window.open('/Rule/DBCheck?DBName=${db.DATABASE_NAME}')">合规检查</button>
                                 <button class="btn btn-primary" type="button">下载报告</button>
                             </td>
                         </tr>

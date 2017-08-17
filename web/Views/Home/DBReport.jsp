@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：如果文件系统使用率大于75%，则State检查结果为False，并且状态为红色</caption>
                 <thead>
                 <tr>
@@ -119,7 +119,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：如果Swap交换区使用率大于20%，则State检查结果为False，并且状态为红色</caption>
                 <thead>
                 <tr>
@@ -154,7 +154,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：</caption>
                 <thead>
                 <tr>
@@ -181,7 +181,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：如果tbsp.TBSP_STATE!='NORMAL'||(tbsp.TBSP_TYPE=='DMS'&&tbsp.TBSP_UTILIZATION_PERCENT>75&&tbsp.TBSP_MAX_SIZE>0)，则State检查结果为False，并且状态为红色</caption>
                 <thead>
                 <tr>
@@ -235,7 +235,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：如果缓冲池命中率低于75%，则State检查结果为False，并且状态为Warning</caption>
                 <thead>
                 <tr>
@@ -336,7 +336,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：按照一段时间内SQL的执行情况进行倒序排序，排名前20的SQL如下</caption>
                 <thead>
                 <tr>
@@ -357,7 +357,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：按照一段时间内SQL的逻辑读情况进行倒序排序，排名前20的SQL如下</caption>
                 <thead>
                 <tr>
@@ -378,7 +378,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-hover table-bordered table-condensed">
                 <caption>说明：按照一段时间内SQL的锁等待时间进行倒序排序，排名前20的SQL如下</caption>
                 <thead>
                 <tr>
@@ -396,7 +396,6 @@
     </div>
 </div>
 <jsp:include page="../Common/bottom.jsp"/>
-<script src="/Javascript/heartcode-canvasloader.js"></script>
 <script type="text/javascript">
 
     function render(chart,data,title,ytitle) {
@@ -521,19 +520,22 @@
     }
 
     function tableAjax(divid,url,cols) {
-        var cl = new CanvasLoader(divid);
-        cl.setColor('#ed2d2d');
-        cl.setDiameter(30);
+        var tbody=window.document.getElementById(divid);
         $.ajax({
             url:url+'?'+getParms(),
             async : true,
             type:'post',
             dataType:'json',
             beforeSend:function () {
-                cl.show();
+                //cl.show();
+                var tr = document.createElement("tr");
+                //var td= document.createElement("td");
+                //tr.appendChild(td);
+                tr.className="center-block";
+                tr.innerHTML="Loading...Please Wait";
+                tbody.appendChild(tr);
             },
             success:function (data) {
-                var tbody=window.document.getElementById(divid);
                 var str = "";
                 for(var i in data){
                     str += "<tr  style='word-break: break-all;font-size: small;'>";
@@ -548,7 +550,6 @@
                 alert(msg);
             },
             complete:function (data) {
-                cl.hide();
             }
         });
     }
