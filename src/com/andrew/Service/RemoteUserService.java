@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class RemoteUserService {
@@ -25,6 +26,14 @@ public class RemoteUserService {
     private final String UPDATE_REMOTEUSER_PASSWD="UPDATE CMDB.REMOTEUSER SET PASSWD=? WHERE HOST=?";
     private final String SELECT_REMOTEUSER_BY_ALL="SELECT ID,HOST,USERNAME,PASSWD FROM CMDB.REMOTEUSER ORDER BY ID";
 
+    private RowMapper rowMapper= (resultSet, i) -> {
+        RemoteUserModel remoteUserModel=new RemoteUserModel();
+        remoteUserModel.setHost(resultSet.getString("HOST"));
+        remoteUserModel.setUserName(resultSet.getString("USERNAME"));
+        remoteUserModel.setPasswd(resultSet.getString("PASSWD"));
+        return remoteUserModel;
+    };
+
     /**
      * Use Host to get Remote User,Passwd
      * If Passwd is not AES Enpycrt,then Enpycrt it
@@ -32,14 +41,6 @@ public class RemoteUserService {
      * @return
      */
     public RemoteUserModel getRemoteUserByHost(String Host){
-        RowMapper rowMapper= (resultSet, i) -> {
-            RemoteUserModel remoteUserModel=new RemoteUserModel();
-            remoteUserModel.setHost(resultSet.getString("HOST"));
-            remoteUserModel.setUserName(resultSet.getString("USERNAME"));
-            remoteUserModel.setPasswd(resultSet.getString("PASSWD"));
-            return remoteUserModel;
-        };
-
         RemoteUserModel remoteUserModel=(RemoteUserModel)jdbcTemplate.query(this.SELECT_REMOTEUSER_BY_HOST,rowMapper,Host).get(0);
         if(remoteUserModel==null){
             logger.error("Can Not Find RemoteUser info For Host:"+Host);
@@ -54,5 +55,13 @@ public class RemoteUserService {
             jdbcTemplate.update(this.UPDATE_REMOTEUSER_PASSWD,tmpPasswd,Host);
         }
         return remoteUserModel;
+    }
+
+    /**
+     * Get All data from table cmdb.remoteuser
+     * @return
+     */
+    public List<RemoteUserModel> getRemoteUserAll(){
+        return this.jdbcTemplate.query(this.SELECT_REMOTEUSER_BY_ALL,rowMapper);
     }
 }

@@ -94,7 +94,7 @@
             showRefresh : true,
             pagination : false,
             switchable : true,
-            idField : 'id',
+            idField : 'ID',
             locale : 'zh-CN',
             showExport: true,
             exportDataType: "all",
