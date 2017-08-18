@@ -65,7 +65,7 @@ public class RuleCheckService {
                 Object parseValue;
                 if (value.contains("\\."))
                     parseValue = Double.parseDouble(value);
-                else parseValue = Integer.valueOf(value);
+                else parseValue = Long.valueOf(value);
                 env.put(String.format("$%s_VALUE", param.get("NAME").toString()), parseValue==null? value:parseValue);
             }
             else {
