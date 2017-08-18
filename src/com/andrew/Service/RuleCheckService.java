@@ -59,21 +59,14 @@ public class RuleCheckService {
         if(extraEnv!=null)
             env=extraEnv;
         for(Map<String,Object> param:params){
-            String value="";
-            if(param.get("VALUE")==null){
-                value="nil";
-            }
-            else {
-                value=param.get("VALUE").toString();
-            }
+            String value=param.get("VALUE")==null? "nil":param.get("VALUE").toString();
             param.replace("NAME",param.get("NAME").toString().replace(".","_").trim());
             if(StringUtils.isNumber(value)&&!value.startsWith("0x")&&!value.contains("e")){
-                Integer valInteger=StringUtils.stringToInteger(value);
-                if(valInteger!=null){
-                    env.put(String.format("$%s_VALUE", param.get("NAME").toString()), valInteger);
-                }else {
-                    env.put(String.format("$%s_VALUE", param.get("NAME").toString()), value);
-                }
+                Object parseValue;
+                if (value.contains("\\."))
+                    parseValue = Double.parseDouble(value);
+                else parseValue = Integer.valueOf(value);
+                env.put(String.format("$%s_VALUE", param.get("NAME").toString()), parseValue==null? value:parseValue);
             }
             else {
                 env.put(String.format("$%s_VALUE", param.get("NAME").toString()), value);

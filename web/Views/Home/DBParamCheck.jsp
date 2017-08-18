@@ -35,8 +35,6 @@
 <script src="/Javascript/bootstrap-table-zh-CN.js"></script>
 <script src="/Javascript/extensions/export/bootstrap-table-export.js"></script>
 <script src="/Javascript/tableExport.js"></script>
-<script src="/Javascript/extensions/toolbar/bootstrap-table-toolbar.js"></script>
-<script src="/Javascript/extensions/natural-sorting/bootstrap-table-natural-sorting.js"></script>
 <script type="text/javascript">
     function getParms() {
         var query=location.search.substring(1);
@@ -82,11 +80,12 @@
                 title : 'Recommand'
             }
         ];
-        $('#'+divid).bootstrapTable('showLoading', null);
+        $('#'+divid).bootstrapTable('destroy');
+        $('#'+divid).bootstrapTable('showLoading');
         $('#'+divid).bootstrapTable({
             cache: false,
             url: url+'?'+getParms(),
-            classes: 'table table-hover ',
+            classes: 'table table-hover',
             columns: cols,
             sortable: true,
             search : true,
@@ -96,13 +95,14 @@
             pagination : false,
             switchable : true,
             idField : 'id',
-            //locale : 'zh-CN',
+            locale : 'zh-CN',
             showExport: true,
             exportDataType: "all",
             exportTypes: ['json', 'txt','csv', 'sql', 'excel'],
             exportOptions: {fileName:title},
             sortStable:true,
-            sidePagination: 'client',
+            pageSize:10,
+            showPaginationSwitch:true,
             pagination: true,
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
@@ -117,9 +117,14 @@
                     strclass = 'warning';
                 }
                 return { classes: strclass }
+            },
+            onLoadSuccess: function(){  //加载成功时执行
+                $('#'+divid).bootstrapTable('hideLoading');
+            },
+            onLoadError: function(){  //加载失败时执行
+                layer.msg("加载数据失败", {time : 1500, icon : 2});
             }
         });
-        $('#'+divid).bootstrapTable('hideLoading', null);
     }
     $(function () {
         buildTable('dbcfgTable','/Rule/dbcfgcheck',getDBName()+'.dbcfg');
