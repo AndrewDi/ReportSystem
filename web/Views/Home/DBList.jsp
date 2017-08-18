@@ -13,7 +13,7 @@
 <head>
     <title>数据库列表</title>
     <jsp:include page="../Common/include.jsp"/>
-    <link href="/Css/dashboard.css" rel="stylesheet">
+    <link href="/Css/sidebar.css" rel="stylesheet">
 </head>
 
 <body>

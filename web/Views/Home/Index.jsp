@@ -10,7 +10,7 @@
 <html lang="zh-CN">
 <head>
     <jsp:include page="../Common/include.jsp"/>
-    <link href="/Css/dashboard.css" rel="stylesheet">
+    <link href="/Css/sidebar.css" rel="stylesheet">
 </head>
 
 <body>
