@@ -64,7 +64,7 @@ public class RuleCheckController {
         if(BaseInfo!=null){
             String host=BaseInfo.get("HOST").toString();
             RemoteUserModel remoteUserModel=remoteUserService.getRemoteUserByHost(host);
-            String sshResult = sshService.ShScpAndExecOnce("getExtRuleParam.sh",remoteUserModel.Host,remoteUserModel.UserName,remoteUserModel.Passwd);
+            String sshResult = sshService.ShScpAndExecOnce("getExtRuleParam.sh",remoteUserModel.getHost(),remoteUserModel.getUserName(),remoteUserModel.getPasswd() );
             return ruleCheckService.getObjectChecked("EXT", ArrayUtils.strToMapList(sshResult));
         }
         return null;

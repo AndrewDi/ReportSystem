@@ -63,11 +63,11 @@ public class HomeController {
             RemoteUserModel remoteUserModel=remoteUserService.getRemoteUserByHost(host);
 
             //Sync to get FileSystem Information
-            String result = sshService.ShScpAndExecOnce("getFileSystem.sh",host,remoteUserModel.UserName,remoteUserModel.Passwd);
+            String result = sshService.ShScpAndExecOnce("getFileSystem.sh",remoteUserModel.getHost(),remoteUserModel.getUserName(),remoteUserModel.getPasswd());
             modelMap.addAttribute("fss",ArrayUtils.strToList(result));
 
             //Sync to get BaseInfo of System
-            String shBaseInfo = sshService.ShScpAndExecOnce("getBaseInfo.sh",host,remoteUserModel.UserName,remoteUserModel.Passwd);
+            String shBaseInfo = sshService.ShScpAndExecOnce("getBaseInfo.sh",remoteUserModel.getHost(),remoteUserModel.getUserName(),remoteUserModel.getPasswd());
             for (String[] info:ArrayUtils.strToList(shBaseInfo)) {
                 BaseInfo.put(info[0],info[1]);
             }
@@ -79,7 +79,7 @@ public class HomeController {
             modelMap.addAttribute("bpfs",dbConnService.getBpfHitRation(DBName,StartTime,EndTime));
 
             //Sync to get Ulimit Values
-            String ulimits = sshService.ShScpAndExecOnce("getUlimit.sh",host,remoteUserModel.UserName,remoteUserModel.Passwd);
+            String ulimits = sshService.ShScpAndExecOnce("getUlimit.sh",remoteUserModel.getHost(),remoteUserModel.getUserName(),remoteUserModel.getPasswd());
             modelMap.addAttribute("ulimits",ArrayUtils.strToList(ulimits));
         }
         modelMap.addAttribute("BaseInfo",BaseInfo);

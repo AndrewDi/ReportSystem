@@ -8,6 +8,6 @@
     <ul class="nav nav-sidebar">
         <li><a href="#">设置</a></li>
         <li><a href="#">编辑规则</a></li>
-        <li><a href="#">编辑SSH账号密码</a></li>
+        <li><a href="/Settings/EditSshUser">编辑SSH账号密码</a></li>
     </ul>
 </div>

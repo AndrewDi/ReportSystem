@@ -23,6 +23,7 @@ public class RemoteUserService {
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
     private final String SELECT_REMOTEUSER_BY_HOST="SELECT HOST,USERNAME,PASSWD FROM CMDB.REMOTEUSER WHERE HOST=?";
     private final String UPDATE_REMOTEUSER_PASSWD="UPDATE CMDB.REMOTEUSER SET PASSWD=? WHERE HOST=?";
+    private final String SELECT_REMOTEUSER_BY_ALL="SELECT ID,HOST,USERNAME,PASSWD FROM CMDB.REMOTEUSER ORDER BY ID";
 
     /**
      * Use Host to get Remote User,Passwd
@@ -33,9 +34,9 @@ public class RemoteUserService {
     public RemoteUserModel getRemoteUserByHost(String Host){
         RowMapper rowMapper= (resultSet, i) -> {
             RemoteUserModel remoteUserModel=new RemoteUserModel();
-            remoteUserModel.Host=resultSet.getString("HOST");
-            remoteUserModel.UserName=resultSet.getString("USERNAME");
-            remoteUserModel.Passwd=resultSet.getString("PASSWD");
+            remoteUserModel.setHost(resultSet.getString("HOST"));
+            remoteUserModel.setUserName(resultSet.getString("USERNAME"));
+            remoteUserModel.setPasswd(resultSet.getString("PASSWD"));
             return remoteUserModel;
         };
 
@@ -44,12 +45,12 @@ public class RemoteUserService {
             logger.error("Can Not Find RemoteUser info For Host:"+Host);
             return null;
         }
-        if(remoteUserModel.Passwd.startsWith(configService.getKeyPre())){
-            String tmpPasswd=remoteUserModel.Passwd.substring(configService.getKeyPre().length());
-            remoteUserModel.Passwd= SymmetricEncoder.AESDncode(tmpPasswd);
+        if(remoteUserModel.getPasswd().startsWith(configService.getKeyPre())){
+            String tmpPasswd=remoteUserModel.getPasswd().substring(configService.getKeyPre().length());
+            remoteUserModel.setPasswd(SymmetricEncoder.AESDncode(tmpPasswd));
         }
         else {
-            String tmpPasswd=configService.getKeyPre().concat(SymmetricEncoder.AESEncode(remoteUserModel.Passwd));
+            String tmpPasswd=configService.getKeyPre().concat(SymmetricEncoder.AESEncode(remoteUserModel.getPasswd()));
             jdbcTemplate.update(this.UPDATE_REMOTEUSER_PASSWD,tmpPasswd,Host);
         }
         return remoteUserModel;
