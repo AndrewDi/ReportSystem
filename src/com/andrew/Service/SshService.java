@@ -70,6 +70,14 @@ public class SshService {
             Session session=sshConnection.openSession();
             session.execCommand(command);
             InputStream inputStream = session.getStdout();
+            InputStream errorStream = session.getStderr();
+            InputStreamReader errorStreamReader = new InputStreamReader(errorStream);
+            BufferedReader errorBufferedReader=new BufferedReader(errorStreamReader);
+            String errorLine;
+            while ((errorLine=errorBufferedReader.readLine())!=null){
+                if(errorLine.contains("standard input")) continue;
+                logger.error(errorLine);
+            }
             InputStreamReader inputStreamReader=new InputStreamReader(inputStream);
             BufferedReader br = new BufferedReader(inputStreamReader);
             String line = null;

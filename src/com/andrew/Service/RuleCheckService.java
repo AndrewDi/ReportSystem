@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class RuleCheckService {
@@ -54,28 +56,67 @@ public class RuleCheckService {
         return this.buildEnv(null,params);
     }
 
+    private Map<String,Object> buildMap(Map<String,Object> map,String name,Object value){
+        int dotIndex=name.indexOf('.');
+        if(dotIndex<0){
+            if(map.containsKey(name)) map.remove(name);
+            String valueStr=(value==null)? "nil":value.toString().trim();
+            if(StringUtils.isNumber(valueStr)&&!valueStr.startsWith("0x")&&!valueStr.contains("e")){
+                Object parseValue;
+                if (valueStr.contains("\\."))
+                    parseValue = Double.parseDouble(valueStr);
+                else parseValue = Long.valueOf(valueStr);
+                map.put(name,parseValue);
+            }
+            else {
+                map.put(name,valueStr);
+            }
+            return map;
+        }
+        Map<String,Object> subMap=new HashMap<>();
+        String keyName=name.substring(0,dotIndex);
+        String newName=name.substring(dotIndex+1);
+        if(map.containsKey(keyName)){
+            subMap=(Map<String,Object>)map.get(keyName);
+        }
+        else {
+            map.put(keyName, subMap);
+        }
+        return this.buildMap(subMap,newName,value);
+    }
+
     public Map<String,Object> buildEnv(Map<String,Object> extraEnv,List<Map<String,Object>> params){
         Map<String, Object> env = new HashMap<>();
         if(extraEnv!=null)
             env=extraEnv;
         for(Map<String,Object> param:params){
-            String value=param.get("VALUE")==null? "nil":param.get("VALUE").toString();
-            param.replace("NAME",param.get("NAME").toString().replace(".","_").trim());
-            if(StringUtils.isNumber(value)&&!value.startsWith("0x")&&!value.contains("e")){
-                Object parseValue;
-                if (value.contains("\\."))
-                    parseValue = Double.parseDouble(value);
-                else parseValue = Long.valueOf(value);
-                env.put(String.format("$%s_VALUE", param.get("NAME").toString()), parseValue==null? value:parseValue);
+            if(param.containsKey("NAME")){
+                String name=param.get("NAME").toString();
+                for (String key:param.keySet()){
+                    if(!key.equals(name)){
+                        this.buildMap(env,String.format("$%s.%s", name,key),param.get(key));
+                    }
+                }
             }
             else {
-                env.put(String.format("$%s_VALUE", param.get("NAME").toString()), value);
-            }
-            if(param.containsKey("VALUE_FLAGS")) {
-                env.put(String.format("$%s_VALUE_FLAGS", param.get("NAME").toString()), param.get("VALUE_FLAGS"));
+                continue;
             }
         }
         return env;
+    }
+
+    private String getValueByEnv(Map<String,Object> env,String fullname){
+        String[] names = fullname.split("\\.");
+        Map<String,Object> tmpEnv=env;
+        for(String name:names){
+            if(tmpEnv.containsKey(name)&&tmpEnv.get(name) instanceof Map){
+                tmpEnv=(Map<String,Object>)tmpEnv.get(name);
+            }
+            else {
+                return tmpEnv.get(name).toString();
+            }
+        }
+        return null;
     }
 
     private List<ParamRuleModel> execRules(List<ParamRuleModel> rules,Map<String,Object> env){
@@ -84,12 +125,7 @@ public class RuleCheckService {
                 Expression expression = AviatorEvaluator.compile(rule.getRule());
                 List<String> variables = expression.getVariableFullNames();
                 for(String var:variables){
-                    if(env.containsKey(var)){
-                        rule.setParams(rule.getParams()+String.format("%s=%s;",var,env.get(var).toString()));
-                    }
-                    else {
-                        rule.setEvalResult(String.format("Can Not Find Var:%s",var));
-                    }
+                    rule.setParams(rule.getParams()+String.format("%s=%s;",var,this.getValueByEnv(env,var)));
                 }
                 Object result = expression.execute(env);
                 rule.setEvalResult(result);

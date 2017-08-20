@@ -12,6 +12,7 @@
     <jsp:include page="../Common/include.jsp"/>
     <link href="/Css/sidebar.css" rel="stylesheet">
     <link rel="stylesheet" href="/Css/bootstrap-table.css">
+    <link rel="stylesheet" href="/Css/bootstrap-editable.css">
     <title>编辑SSH用户</title>
 </head>
 
@@ -46,18 +47,38 @@
                 field : 'host',
                 title : 'Host',
                 sortable : true,
-                editable:true,
-                placeholder:'Required'
+                editable:{
+                    type: 'text',
+                    title: '主机名',
+                    validate: function (v) {
+                        if (!v) return '主机名不能为空';
+
+                    }
+                }
             },
             {
                 field : 'userName',
                 title : 'UserName',
-                editable:true
+                editable:{
+                    type: 'text',
+                    title: '用户名',
+                    validate: function (v) {
+                        if (!v) return '用户名不能为空';
+
+                    }
+                }
             },
             {
                 field : 'passwd',
                 title : 'Passwd',
-                editable:true
+                editable:{
+                    type: 'textarea',
+                    title: '密码',
+                    validate: function (v) {
+                        if (!v) return '密码不能为空';
+
+                    }
+                }
             }
         ];
         $('#userTable').bootstrapTable('destroy');
@@ -89,6 +110,25 @@
             },
             onLoadError: function(){  //加载失败时执行
                 layer.msg("加载数据失败", {time : 1500, icon : 2});
+            },
+            onEditableSave: function (field, row, oldValue, $el) {
+                $.ajax({
+                    type: "post",
+                    url: "/Editable/Edit",
+                    data: row,
+                    dataType: 'json',
+                    success: function (data, status) {
+                        if (status == "success") {
+                            alert('提交数据成功');
+                        }
+                    },
+                    error: function () {
+                        alert('编辑失败');
+                    },
+                    complete: function () {
+
+                    }
+                });
             }
         });
     })
