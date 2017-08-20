@@ -22,12 +22,14 @@ public class RemoteUserService {
     private ConfigService configService;
 
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
-    private final String SELECT_REMOTEUSER_BY_HOST="SELECT HOST,USERNAME,PASSWD FROM CMDB.REMOTEUSER WHERE HOST=?";
+    private final String SELECT_REMOTEUSER_BY_HOST="SELECT ID,HOST,USERNAME,PASSWD FROM CMDB.REMOTEUSER WHERE HOST=?";
     private final String UPDATE_REMOTEUSER_PASSWD="UPDATE CMDB.REMOTEUSER SET PASSWD=? WHERE HOST=?";
     private final String SELECT_REMOTEUSER_BY_ALL="SELECT ID,HOST,USERNAME,PASSWD FROM CMDB.REMOTEUSER ORDER BY ID";
+    private final String UPDATE_REMOTEUSER_BY_ID="UPDATE CMDB.REMOTEUSER SET HOST=?,USERNAME=?,PASSWD=? WHERE ID=?";
 
     private RowMapper rowMapper= (resultSet, i) -> {
         RemoteUserModel remoteUserModel=new RemoteUserModel();
+        remoteUserModel.setId(resultSet.getInt("ID"));
         remoteUserModel.setHost(resultSet.getString("HOST"));
         remoteUserModel.setUserName(resultSet.getString("USERNAME"));
         remoteUserModel.setPasswd(resultSet.getString("PASSWD"));
@@ -63,5 +65,10 @@ public class RemoteUserService {
      */
     public List<RemoteUserModel> getRemoteUserAll(){
         return this.jdbcTemplate.query(this.SELECT_REMOTEUSER_BY_ALL,rowMapper);
+    }
+
+    public int editRemoteUserByID(RemoteUserModel model){
+        int rows =  this.jdbcTemplate.update(this.UPDATE_REMOTEUSER_BY_ID,model.host,model.userName,model.passwd,model.getId());
+        return rows;
     }
 }

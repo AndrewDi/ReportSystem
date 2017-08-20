@@ -28,4 +28,12 @@ public class RemoteUserController {
     List<RemoteUserModel> getRemoteUsersAll() {
         return this.remoteUserService.getRemoteUserAll();
     }
+
+    @RequestMapping("editRemoteusers")
+    @ResponseBody
+    public int editRemoteUser(final RemoteUserModel model) {
+        if(model==null||model.getId()==0)
+            return -1;
+        return this.remoteUserService.editRemoteUserByID(model);
+    }
 }
