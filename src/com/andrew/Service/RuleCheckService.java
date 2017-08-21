@@ -62,11 +62,15 @@ public class RuleCheckService {
             if(map.containsKey(name)) map.remove(name);
             String valueStr=(value==null)? "nil":value.toString().trim();
             if(StringUtils.isNumber(valueStr)&&!valueStr.startsWith("0x")&&!valueStr.contains("e")){
-                Object parseValue;
-                if (valueStr.contains("\\."))
-                    parseValue = Double.parseDouble(valueStr);
-                else parseValue = Long.valueOf(valueStr);
-                map.put(name,parseValue);
+                try {
+                    Object parseValue;
+                    if (valueStr.contains("\\."))
+                        parseValue = Double.parseDouble(valueStr);
+                    else parseValue = Long.valueOf(valueStr);
+                    map.put(name, parseValue);
+                }catch (NumberFormatException e){
+                    map.put(name,valueStr);
+                }
             }
             else {
                 map.put(name,valueStr);
@@ -113,7 +117,10 @@ public class RuleCheckService {
                 tmpEnv=(Map<String,Object>)tmpEnv.get(name);
             }
             else {
-                return tmpEnv.get(name).toString();
+                if(tmpEnv.get(name)==null)
+                    return "nil";
+                else
+                    return tmpEnv.get(name).toString();
             }
         }
         return null;

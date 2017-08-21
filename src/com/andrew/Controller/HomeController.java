@@ -41,6 +41,11 @@ public class HomeController {
         return "Home/Index";
     }
 
+    @RequestMapping("DBPerformance")
+    public String DBPerformance(){
+        return "Home/DBPerformance";
+    }
+
     @RequestMapping("DBList")
     public String DBList(ModelMap modelMap){
         modelMap.addAttribute("data",dbConnService.getDBConnALL());

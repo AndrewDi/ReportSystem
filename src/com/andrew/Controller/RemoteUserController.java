@@ -36,4 +36,20 @@ public class RemoteUserController {
             return -1;
         return this.remoteUserService.editRemoteUserByID(model);
     }
+
+    @RequestMapping("addRemoteusers")
+    @ResponseBody
+    public int addRemoteUser(final RemoteUserModel model) {
+        if(model.getId()!=0)
+            return -1;
+        return this.remoteUserService.insertRemoteUser(model);
+    }
+
+    @RequestMapping("deleteRemoteusers")
+    @ResponseBody
+    public int addRemoteUser(int id) {
+        if(id==0)
+            return -1;
+        return this.remoteUserService.deleteRemoteUser(id);
+    }
 }

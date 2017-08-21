@@ -27,7 +27,7 @@
            <table id="userTable"></table>
        </div>
        <div id="toolbar" class="btn-group">
-           <button id="btn_add" type="button" class="btn btn-default">
+           <button id="btn_add" type="button" class="btn btn-default" data-toggle="modal" data-target="#addHostModal">
                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
            </button>
            <button id="btn_delete" type="button" class="btn btn-default">
@@ -38,6 +38,42 @@
            </button>
        </div>
    </div>
+    <div class="modal fade" id="addHostModal" tabindex="-1" role="dialog" aria-labelledby="addHost">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="dateTimeModalLabel">添加主机</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="hostInput" class="col-sm-2 control-label">主机名</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="hostInput" placeholder="主机名" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="userNameInput" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="userNameInput" placeholder="用户名" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwdInput" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="passwdInput" placeholder="密码" type="password" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" id="modal-submit" class="btn btn-primary" onclick="onModalSubmit(this)" >确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <jsp:include page="../Common/bottom.jsp"/>
 <script src="/Javascript/bootstrap-table.js"></script>
@@ -47,15 +83,46 @@
 <script src="/Javascript/bootstrap-editable.js"></script>
 <script src="/Javascript/extensions/editable/bootstrap-table-editable.js"></script>
 <script type="text/javascript">
-    $('#btn_add').click(function () {
-        var index = $('#userTable').bootstrapTable('getData').length;
-        $('#userTable').bootstrapTable('insertRow', {
-            index: index,
-            row: {
-                id: index+1
+
+    function onModalSubmit(e) {
+        var modal = $('#addHostModal');
+        var host = modal.find('#hostInput')[0].value;
+        var username = modal.find('#userNameInput')[0].value;
+        var passwd = modal.find('#passwdInput')[0].value;
+        if(host==''){
+            alert("主机名不能为空");
+            return;
+        }
+        if(username==''){
+            alert("用户名不能为空");
+            return;
+        }
+        if(passwd==''){
+            alert("密码不能为空");
+            return;
+        }
+        var row={
+            id:0,
+            host:host,
+            userName:username,
+            passwd:passwd
+        };
+        $.ajax({
+            type:"POST",
+            async:true,
+            url:"/Settings/addRemoteusers",
+            data:row,
+            datatype:'JSON',
+            success:function(data){
+                $('#userTable').bootstrapTable('refresh');
+                modal.modal('hide');
+            },
+            error:function (data) {
+                alert("添加失败");
             }
         });
-    });
+    }
+
     $('#btn_delete').click(function () {
         var ids = $.map($('#userTable').bootstrapTable('getSelections'),function (row) {
             return row.id;
@@ -65,7 +132,19 @@
             return;
         };
         $.each(ids,function (index,value) {
-            //添加ajax删除行
+            $.ajax({
+                type:"POST",
+                async:true,
+                url:"/Settings/deleteRemoteusers",
+                data:{id:value},
+                datatype:'JSON',
+                success:function(data){
+                    alert("删除成功[Rows="+data+"]");
+                },
+                error:function (data) {
+                    alert("删除失败");
+                }
+            });
         });
         $('#userTable').bootstrapTable('remove', {
             field: 'id',
