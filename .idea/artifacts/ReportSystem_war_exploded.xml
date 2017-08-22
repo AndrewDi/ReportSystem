@@ -18,6 +18,7 @@
           <element id="library" level="project" name="jstl" />
           <element id="library" level="project" name="jackson-annotations-2.9.0" />
           <element id="library" level="project" name="com.googlecode.aviator:aviator:3.1.0" />
+          <element id="library" level="project" name="org.docx4j:docx4j:3.3.5" />
         </element>
       </element>
     </root>

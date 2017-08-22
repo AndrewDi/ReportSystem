@@ -157,7 +157,7 @@
                     saveAsImage : {
                         show : true,
                         title : '保存为图片',
-                        type : 'jpeg',
+                        type : 'png',
                         lang : ['点击保存']
                     }
                 }
