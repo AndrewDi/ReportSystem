@@ -68,4 +68,27 @@ public class ArrayUtils {
         return jsonFormat;
     }
 
+
+    public static Map<String,Object> listToMapForAll(List<Map<String,Object>> datas){
+        Map<String,Object> jsonFormat = new HashMap<>();
+        List<String> snaptimes = new LinkedList<>();
+        for (Map<String,Object> data:datas){
+            String dbname=data.get("DBNAME").toString();
+            String snaptime=data.get("SNAPTIME").toString();
+            String val=data.get("VAL").toString();
+            if(!jsonFormat.containsKey(dbname)){
+                List<String> serie = new LinkedList<>();
+                jsonFormat.put(dbname,serie);
+            }
+            if(jsonFormat.containsKey(dbname)){
+                List<String> serie = (List<String>)jsonFormat.get(dbname);
+                serie.add(val);
+                if(snaptimes.size()<serie.size()){
+                    snaptimes.add(snaptime);
+                }
+            }
+        }
+        jsonFormat.put("SNAPTIME",snaptimes.toArray());
+        return jsonFormat;
+    }
 }
