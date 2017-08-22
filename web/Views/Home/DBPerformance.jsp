@@ -36,6 +36,7 @@
                     <input class="form-control" id="endTimeInput" placeholder="结束时间" required>
                 </div>
                 <button type="submit" id="generateReportBtn" class="btn btn-primary" style="padding-left: 10px;">生成报告</button>
+                <button type="button" id="exportReportBtn" class="btn btn-default" style="padding-left: 10px;" disabled>导出报告</button>
             </form>
             <div class="row hidden" id="mainReport">
                 <br/>
@@ -101,6 +102,8 @@
 <link href="/Css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="/Javascript/moment.js"></script>
 <script src="/Javascript/bootstrap-datetimepicker.js"></script>
+<script src="/Javascript/FileSaver.js"></script>
+<script src="/Javascript/jquery.wordexport.js"></script>
 <script type="text/javascript">
     $(function () {
         var timePickerOption={
@@ -282,6 +285,13 @@
         chartAjax('memUsedChart','/DBPerf/getmemused',params,'数据库内存使用量',null,null);
         chartAjax('concurrentChart','/DBPerf/getconcurrent',params,'数据库当前活动连接数量',null,null);
         chartAjax('bpfHitRatioChart','/DBPerf/getbpfhitratio',params,'数据库缓冲池命中率',null,null);
+
+        $('#exportReportBtn').removeAttr("disabled");
+    });
+
+    $('#exportReportBtn').click(function (event) {
+        event.preventDefault();
+        $('#mainReport').wordExport("性能容量报告");
     });
 </script>
 </body>
