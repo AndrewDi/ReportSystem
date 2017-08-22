@@ -1,17 +1,27 @@
 package com.andrew.Controller;
 
+import com.andrew.Common.DocxUtils;
+import com.andrew.Model.DocxPerfModel;
 import com.andrew.Service.DBPerfService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.servlet.HttpServletBean;
+import org.springframework.web.util.WebUtils;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/DBPerf")
-public class DBPerfController {
+public class DBPerfController{
 
     @Autowired
     private DBPerfService dbPerfService;
@@ -61,5 +71,17 @@ public class DBPerfController {
                                   @RequestParam(value = "EndTime",required = true) String EndTime){
 
         return this.dbPerfService.getBpfHitRatioAll(StartTime,EndTime);
+    }
+
+    @RequestMapping("downloadReport")
+    public @ResponseBody
+    String downloadReport(@RequestBody DocxPerfModel docxPerfModel){
+        String path="";
+        try {
+            path=WebUtils.getRealPath(ContextLoader.getCurrentWebApplicationContext().getServletContext(), "/Download");
+        }catch (FileNotFoundException e){
+            path="/";
+        }
+        return DocxUtils.buildReport(path,docxPerfModel.getTitles(),docxPerfModel.getCaptions(),docxPerfModel.getCharts());
     }
 }

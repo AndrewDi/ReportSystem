@@ -106,6 +106,7 @@
     <mvc:resources mapping="/Css/**" location="/Css/" cache-period="0"/>
     <mvc:resources mapping="/fonts/**" location="/fonts/" cache-period="0"/>
     <mvc:resources mapping="/Shell/**" location="/Shell/" cache-period="0"/>
+    <mvc:resources mapping="/Download/**" location="/Download/" cache-period="0"/>
 
     <!-- 总错误处理
     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
@@ -122,7 +123,7 @@
     -->
 
     <bean id="configService" class="com.andrew.Service.ConfigService">
-        <property name="shellPath" value="E:\Developer\Java\ReportSystem\web\Shell"/>
+        <property name="shellPath" value="F:\Developer\Java\ReportSystem\web\Shell"/>
         <property name="keyPre" value="{AES}"/>
     </bean>
 </beans>

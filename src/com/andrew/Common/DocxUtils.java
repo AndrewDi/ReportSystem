@@ -11,10 +11,19 @@ import java.io.*;
 import java.time.LocalDateTime;
 
 public class DocxUtils {
-    public static String buildReport(String[] titles,String[] captions,String[] imgcodes){
+
+    public static String buildReportReturnFile(String[] titles,String[] captions,String[] imgcodes){
         LocalDateTime localDateTime=LocalDateTime.now();
         String docxFileName=localDateTime.toLocalDate().toString()+"-"+localDateTime.toLocalTime().toString().replace(":",".")+".docx";
         File docxFile=new File(docxFileName);
+
+        return docxFile.getAbsolutePath();
+    }
+
+    public static String buildReport(String path,String[] titles,String[] captions,String[] imgcodes){
+        LocalDateTime localDateTime=LocalDateTime.now();
+        String docxFileName=localDateTime.toLocalDate().toString()+"-"+localDateTime.toLocalTime().toString().replace(":",".")+".docx";
+        File docxFile=new File(path+"/"+docxFileName);
         try {
             WordprocessingMLPackage wordprocessingMLPackage = WordprocessingMLPackage.createPackage();
             wordprocessingMLPackage.getMainDocumentPart().addStyledParagraphOfText("Title", "数据库性能容量报告");
@@ -37,7 +46,7 @@ public class DocxUtils {
         }catch (Exception dException){
             return null;
         }
-        return docxFile.getAbsolutePath();
+        return docxFileName;
     }
 
     /**

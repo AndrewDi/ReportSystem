@@ -41,7 +41,7 @@
             <div class="row hidden" id="mainReport">
                 <br/>
                 <div class="row">
-                    <div class="col-md-6"  style="color: #336699;padding-top: 40px">
+                    <div class="col-md-6 title"  style="color: #336699;padding-top: 40px">
                         1) 数据库平均每秒事物响应时间：
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     <div id="rsptChart" class="chartDiv"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"  style="color: #336699;padding-top: 80px">
+                    <div class="col-md-6 title"  style="color: #336699;padding-top: 80px">
                         2) 数据库平均每秒事务数量：
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                     <div id="tpsChart" class="chartDiv"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"  style="color: #336699;padding-top: 80px">
+                    <div class="col-md-6 title"  style="color: #336699;padding-top: 80px">
                         3) 数据库表空间使用率：
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                     <div id="tbspChart" class="chartDiv"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"  style="color: #336699;padding-top: 80px">
+                    <div class="col-md-6 title"  style="color: #336699;padding-top: 80px">
                         4) 数据库内存使用量：
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                     <div id="memUsedChart" class="chartDiv"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"  style="color: #336699;padding-top: 80px">
+                    <div class="col-md-6 title"  style="color: #336699;padding-top: 80px">
                         5) 数据库当前活动连接数量：
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                     <div id="concurrentChart" class="chartDiv"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"  style="color: #336699;padding-top: 80px">
+                    <div class="col-md-6 title"  style="color: #336699;padding-top: 80px">
                         6) 数据库缓冲池命中率：
                     </div>
                 </div>
@@ -102,8 +102,6 @@
 <link href="/Css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="/Javascript/moment.js"></script>
 <script src="/Javascript/bootstrap-datetimepicker.js"></script>
-<script src="/Javascript/FileSaver.js"></script>
-<script src="/Javascript/jquery.wordexport.js"></script>
 <script type="text/javascript">
     $(function () {
         var timePickerOption={
@@ -290,8 +288,38 @@
     });
 
     $('#exportReportBtn').click(function (event) {
-        event.preventDefault();
-        $('#mainReport').wordExport("性能容量报告");
+        var charts=$.map($.find("div[class='chartDiv']"),function (data,index) {
+            var chart=echarts.getInstanceByDom(document.getElementById(data.id));
+            return chart.getDataURL("png");
+        });
+        var titles=$.map($.find("div[class*='title']"),function (data,index) {
+            return data.innerText;
+        });
+
+        var captions=$.map($.find("div[class*='chartCaption']"),function (data,index) {
+            return data.innerText;
+        });
+        var jsondata={
+            charts: charts,
+            titles: titles,
+            captions: captions
+        };
+        $.ajax({
+            url: '/DBPerf/downloadReport',
+            type:'post',
+            async:true,
+            data: JSON.stringify(jsondata),
+            contentType:'application/json',
+            dataType:'json',
+            success:function (data) {
+                window.open("/Download/"+data);
+            },
+            error:function (msg) {
+                console.log(msg);
+            },
+            complete:function (data) {
+            }
+        });
     });
 </script>
 </body>
