@@ -28,8 +28,8 @@ public class DocxUtils {
             WordprocessingMLPackage wordprocessingMLPackage = WordprocessingMLPackage.createPackage();
             wordprocessingMLPackage.getMainDocumentPart().addStyledParagraphOfText("Title", "数据库性能容量报告");
             for(int i=0;i<titles.length;i++){
-                wordprocessingMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading 1",titles[i]);
-                wordprocessingMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",captions[i]);
+                wordprocessingMLPackage.getMainDocumentPart().addStyledParagraphOfText("NoteHeading",titles[i]);
+                wordprocessingMLPackage.getMainDocumentPart().addStyledParagraphOfText("CommentText",captions[i]);
                 String base64Info=imgcodes[i];
                 BASE64Decoder decoder=new BASE64Decoder();
                 base64Info = base64Info.replaceAll(" ", "+");

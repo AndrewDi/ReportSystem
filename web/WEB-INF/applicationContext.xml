@@ -123,7 +123,7 @@
     -->
 
     <bean id="configService" class="com.andrew.Service.ConfigService">
-        <property name="shellPath" value="F:\Developer\Java\ReportSystem\web\Shell"/>
+        <property name="shellPath" value=""/>
         <property name="keyPre" value="{AES}"/>
     </bean>
 </beans>

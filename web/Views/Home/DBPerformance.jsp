@@ -288,6 +288,8 @@
     });
 
     $('#exportReportBtn').click(function (event) {
+        event.preventDefault();
+        var exportBtn=$(this);
         var charts=$.map($.find("div[class='chartDiv']"),function (data,index) {
             var chart=echarts.getInstanceByDom(document.getElementById(data.id));
             return chart.getDataURL("png");
@@ -311,6 +313,9 @@
             data: JSON.stringify(jsondata),
             contentType:'application/json',
             dataType:'json',
+            beforeSend:function () {
+                exportBtn.attr("disabled","disabled");
+            },
             success:function (data) {
                 window.open("/Download/"+data);
             },
@@ -318,6 +323,7 @@
                 console.log(msg);
             },
             complete:function (data) {
+                exportBtn.removeAttr("disabled");
             }
         });
     });
