@@ -1,5 +1,6 @@
 package com.andrew.Service;
 
+import com.andrew.Common.Base64Utils;
 import com.andrew.Common.SymmetricEncoder;
 import com.andrew.Model.RemoteUserModel;
 import org.slf4j.Logger;
@@ -57,10 +58,10 @@ public class RemoteUserService {
         }
         if(remoteUserModel.getPasswd().startsWith(configService.getKeyPre())){
             String tmpPasswd=remoteUserModel.getPasswd().substring(configService.getKeyPre().length());
-            remoteUserModel.setPasswd(SymmetricEncoder.AESDncode(tmpPasswd));
+            remoteUserModel.setPasswd(Base64Utils.Decode(tmpPasswd));
         }
         else {
-            String tmpPasswd=configService.getKeyPre().concat(SymmetricEncoder.AESEncode(remoteUserModel.getPasswd()));
+            String tmpPasswd=configService.getKeyPre().concat(Base64Utils.Encode(remoteUserModel.getPasswd()));
             jdbcTemplate.update(this.UPDATE_REMOTEUSER_PASSWD,tmpPasswd,Host);
         }
         return remoteUserModel;

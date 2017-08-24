@@ -33,11 +33,15 @@ elif [ -f /etc/redhat-release ];then
    swapsize=$(echo "${freem}"|awk '$1~/Swap/{print $2}');
    swapfree=$(echo "${freem}"|awk '$1~/Swap/{print $4}');
    cpusize=$(grep processor /proc/cpuinfo|wc -l);
+elif [ -f /usr/bin/oslevel ];then
+   ##Get Full OSLevel
+   OSType="AIX ";
+   Major=$(oslevel -s);
 fi
 
 echo "oslevel|${OSType}${Major} ${Patch}";
-echo "memsize|${memsize}";
-echo "swapsize|${swapsize}";
-echo "swapfree|${swapfree}";
+echo "memsize|${memsize:-unknow}";
+echo "swapsize|${swapsize:-unknow}";
+echo "swapfree|${swapfree:-unknow}";
 echo "hostname|$(hostname)";
-echo "cpusize|${cpusize}";
+echo "cpusize|${cpusize:-unknow}";

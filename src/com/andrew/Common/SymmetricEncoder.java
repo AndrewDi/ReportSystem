@@ -20,6 +20,8 @@ import sun.misc.BASE64Encoder;
  * AES对称加密和解密
  */
 public class SymmetricEncoder {
+
+    private static final String encodeRules="comandrewServiceSshServiceAndrew";
     /*
      * 加密
      * 1.构造密钥生成器
@@ -30,7 +32,6 @@ public class SymmetricEncoder {
      * 6.返回字符串
      */
     public static String AESEncode(String content){
-        String encodeRules="Andrew";
         try {
             //1.构造密钥生成器，指定为AES算法,不区分大小写
             KeyGenerator keygen=KeyGenerator.getInstance("AES");
@@ -84,7 +85,6 @@ public class SymmetricEncoder {
      * 3.将加密内容解密
      */
     public static String AESDncode(String content){
-        String encodeRules="Andrew";
         try {
             //1.构造密钥生成器，指定为AES算法,不区分大小写
             KeyGenerator keygen=KeyGenerator.getInstance("AES");

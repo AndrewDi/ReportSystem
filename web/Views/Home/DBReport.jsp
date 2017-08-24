@@ -113,6 +113,7 @@
                 </tbody>
             </table>
         </div>
+        <c:if test="${BaseInfo.swapsize!='unknow'}">
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
                 3) Swap交换区大小使用情况检查：
@@ -148,6 +149,8 @@
                 </tbody>
             </table>
         </div>
+        </c:if>
+        <c:if test="${!empty ulimits}">
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
                 4) 实例用户limit设置检查：
@@ -174,6 +177,7 @@
                 </tbody>
             </table>
         </div>
+        </c:if>
         <h3 class="sub-header" style="color: #336699">2、数据库检查</h3>
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
