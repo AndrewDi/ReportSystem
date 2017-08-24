@@ -277,7 +277,7 @@
         var endTime=$('#endTimeInput').val();
         var params='StartTime='+startTime+'&EndTime='+endTime;
         $('#mainReport').attr('class','row'); //显示隐藏div
-        chartAjax('rsptChart','/DBPerf/getrspt',params,'数据库事务平均响应时间',100,10);
+        chartAjax('rsptChart','/DBPerf/getrspt',params,'数据库事务平均响应时间',120,10);
         chartAjax('tpsChart','/DBPerf/gettps',params,'数据库平均每秒事务数量',null,null);
         chartAjax('tbspChart','/DBPerf/gettbsp',params,'数据库表空间使用率',null,null);
         chartAjax('memUsedChart','/DBPerf/getmemused',params,'数据库内存使用量',null,null);
