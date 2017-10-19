@@ -124,6 +124,6 @@
 
     <bean id="configService" class="com.andrew.Service.ConfigService">
         <property name="shellPath" value=""/>
-        <property name="keyPre" value="{AES}"/>
+        <property name="keyPre" value="{BASE64}"/>
     </bean>
 </beans>
