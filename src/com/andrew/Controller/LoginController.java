@@ -30,4 +30,12 @@ public class LoginController {
         return new ModelAndView("Home/Index");
     }
 
+    @RequestMapping(value = "/Logout",method = RequestMethod.GET)
+    public String Logout(HttpSession session){
+        if(session.getAttribute("isLogin")!=null){
+            session.removeAttribute("isLogin");
+        }
+        return "Login/Index";
+    }
+
 }
