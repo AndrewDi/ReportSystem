@@ -36,13 +36,41 @@
 <script src="/Javascript/extensions/export/bootstrap-table-export.js"></script>
 <script src="/Javascript/tableExport.js"></script>
 <script type="text/javascript">
+    function funcUrl(name,value,type){
+        var loca = window.location;
+        var baseUrl = type==undefined ? loca.origin + loca.pathname + "?" : "";
+        var query = loca.search.substr(1);
+        // 如果没有传参,就返回 search 值 不包含问号
+        if (name==undefined) { return query }
+        // 如果没有传值,就返回要查询的参数的值
+        if (value==undefined){
+            var val = query.match(new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"));
+            return val!=null ? decodeURI(val[2]) : null;
+        };
+        var url;
+        if (query=="") {
+            // 如果没有 search 值,则返回追加了参数的 url
+            url = baseUrl + name + "=" + value;
+        }else{
+            // 如果没有 search 值,则在其中修改对应的值,并且去重,最后返回 url
+            var obj = {};
+            var arr = query.split("&");
+            for (var i = 0; i < arr.length; i++) {
+                arr[i] = arr[i].split("=");
+                obj[arr[i][0]] = arr[i][1];
+            };
+            obj[name] = value;
+            url = baseUrl + JSON.stringify(obj).replace(/[\"\{\}]/g,"").replace(/\:/g,"=").replace(/\,/g,"&");
+        };
+        return url;
+    }
+
     function getParms() {
         var query=location.search.substring(1);
         return query;
     }
     function getDBName() {
-        var param=getParms();
-        var dbname = param.substring(param.indexOf("=")+1);
+        var dbname = funcUrl("DBName");
         return dbname;
     }
     function buildTable(divid,url,title) {
@@ -127,10 +155,10 @@
         });
     }
     $(function () {
-        buildTable('dbcfgTable','/Rule/dbcfgcheck',getDBName()+'.dbcfg');
-        buildTable('dbmcfgTable','/Rule/dbmcfgcheck',getDBName()+'.dbmcfg');
-        buildTable('db2setTable','/Rule/db2setcheck',getDBName()+'.db2set');
-        buildTable('extTable','/Rule/extcheck',getDBName()+'.ext');
+        buildTable('dbcfgTable','/Rule/dbcfgcheck',funcUrl("DBName")+'.dbcfg');
+        buildTable('dbmcfgTable','/Rule/dbmcfgcheck',funcUrl("DBName")+'.dbmcfg');
+        buildTable('db2setTable','/Rule/db2setcheck',funcUrl("DBName")+'.db2set');
+        buildTable('extTable','/Rule/extcheck',funcUrl("DBName")+'.ext');
     })
 </script>
 </body>

@@ -33,11 +33,11 @@
         <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
         <init-param>
             <param-name>loginUsername</param-name>
-            <param-value>druid</param-value>
+            <param-value>admin</param-value>
         </init-param>
         <init-param>
             <param-name>loginPassword</param-name>
-            <param-value>druid</param-value>
+            <param-value>ASdf@0987</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

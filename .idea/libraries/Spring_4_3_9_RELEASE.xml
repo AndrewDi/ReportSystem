@@ -22,8 +22,6 @@
       <root url="jar://$PROJECT_DIR$/lib/spring-jms-4.3.9.RELEASE.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.ideaLibSources/spring-jdbc-4.3.9.RELEASE-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

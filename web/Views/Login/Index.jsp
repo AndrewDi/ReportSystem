@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Andrew
@@ -30,13 +31,12 @@
 <body>
 
 <div class="container">
-
-    <form class="form-signin"  action="/Home/index" method="post" commandName="login" >
+    <form class="form-signin"  action="/Login" method="post">
         <h2 class="form-signin-heading">请登陆</h2>
         <label for="InputUserName" class="sr-only">用户名</label>
-        <input id="InputUserName" class="form-control" placeholder="用户名" required autofocus>
+        <input id="InputUserName" name="InputUserName" class="form-control" placeholder="用户名" required autofocus>
         <label for="inputPassword" class="sr-only">密码</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
+        <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="密码" required>
         <div class="checkbox">
             <label>
                 <input type="checkbox" value="remember-me"> 记住我
@@ -46,6 +46,12 @@
     </form>
 
 </div> <!-- /container -->
+
+    <c:if test="${!empty error}">
+        <script type="text/javascript">
+            alert("${error}");
+        </script>
+    </c:if>
 
 </body>
 </html>

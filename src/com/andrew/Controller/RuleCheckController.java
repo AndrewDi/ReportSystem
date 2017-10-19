@@ -59,13 +59,13 @@ public class RuleCheckController {
 
     @RequestMapping("extcheck")
     public @ResponseBody
-    List<ParamRuleModel> getExtChecked(@RequestParam(value = "DBName",required = true) String DBName){
+    List<ParamRuleModel> getExtChecked(@RequestParam(value = "DBName",required = true) String DBName,@RequestParam(value = "OS_Type",required = true) String OS_TYPE){
         Map<String,Object> BaseInfo=dbConnService.getDBConnAny(DBName);
         if(BaseInfo!=null){
             String host=BaseInfo.get("HOST").toString();
             RemoteUserModel remoteUserModel=remoteUserService.getRemoteUserByHost(host);
             String sshResult = sshService.ShScpAndExecOnce("getExtRuleParam.sh",remoteUserModel.getHost(),remoteUserModel.getUserName(),remoteUserModel.getPasswd() );
-            return ruleCheckService.getObjectChecked("EXT", ArrayUtils.strToMapList(sshResult));
+            return ruleCheckService.getObjectChecked(OS_TYPE+"_EXT", ArrayUtils.strToMapList(sshResult));
         }
         return null;
     }

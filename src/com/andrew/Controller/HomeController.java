@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/Home")
@@ -36,9 +38,14 @@ public class HomeController {
     private ConfigService configService;
 
     @RequestMapping("index")
-    public String Index(ModelMap modelMap){
-
-        return "Home/Index";
+    public String Index(ModelMap modelMap, HttpSession session){
+        Object isLogin= session.getAttribute("isLogin");
+        if(isLogin!=null&&(Boolean) isLogin)
+            return "Home/Index";
+        else {
+            modelMap.put("error","Please login first");
+            return "Login/Index";
+        }
     }
 
     @RequestMapping("DBPerformance")
