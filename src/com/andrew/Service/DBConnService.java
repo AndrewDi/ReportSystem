@@ -58,6 +58,18 @@ public class DBConnService {
             "  WHERE   DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
             "ORDER BY COLLECTED ASC";
 
+    private String SELECT_DSM_TOTAL_SORTS="SELECT COLLECTED + 8 HOURS AS SNAPTIME," +
+            "         TOTAL_SORTS_DELTA/(DELTA_MSEC/1000) AS TPS" +
+            "  FROM IBM_DSM_VIEWS.THROUGHPUT_ALL" +
+            "  WHERE   DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
+            "ORDER BY COLLECTED ASC";
+
+    private String SELECT_DSM_SORT_OVERFLOW="SELECT COLLECTED + 8 HOURS AS SNAPTIME," +
+            "         SORT_OVERFLOWS_DELTA/(DELTA_MSEC/1000) AS TPS" +
+            "  FROM IBM_DSM_VIEWS.THROUGHPUT_ALL" +
+            "  WHERE   DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
+            "ORDER BY COLLECTED ASC";
+
     private String SELECT_DSM_CONCURRENT_USED="SELECT COLLECTED + 8 HOURS AS SNAPTIME,NUM_ACTIVE_SESSIONS" +
             "  FROM IBM_DSM_VIEWS.DB_SUMMARY_SESSIONS" +
             "  WHERE  DBCONN_ID =? AND COLLECTED + 8 HOURS BETWEEN ? AND ? " +
@@ -205,6 +217,16 @@ public class DBConnService {
 
     public Map<String, Object[]> getConCurrent(String dbname, String startTime, String endTime){
         List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_CONCURRENT_USED,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getSortOverFlow(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_SORT_OVERFLOW,dbname,startTime,endTime);
+        return ArrayUtils.listToMap(datas);
+    }
+
+    public Map<String, Object[]> getTotalSorts(String dbname, String startTime, String endTime){
+        List<Map<String,Object>> datas = jdbcTemplate.queryForList(this.SELECT_DSM_TOTAL_SORTS,dbname,startTime,endTime);
         return ArrayUtils.listToMap(datas);
     }
 

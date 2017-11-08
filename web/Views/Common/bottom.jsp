@@ -14,8 +14,10 @@
     })(jQuery);
     $(function () {
         var curPath=window.location.pathname;
-        var menus=$("ul a[href='"+curPath+"']");
-        var parentLi=menus.parent()[0];
-        parentLi.className="active";
+        if(menus!=undefined) {
+            var menus = $("ul a[href='" + curPath + "']");
+            var parentLi = menus.parent()[0];
+            parentLi.setAttribute("class", "active");
+        }
     })
 </script>

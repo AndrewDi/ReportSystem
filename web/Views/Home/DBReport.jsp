@@ -333,6 +333,24 @@
             <div class="col-md-12 chartCaption">说明：数据库锁升级反映了数据库是否发生过严重锁升级情况</div>
             <div id="lockEscalsChart" class="chartDiv" ></div>
         </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                9) 数据库每秒排序情况：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：数据库每秒排序情况反映了数据库排序的频繁程度</div>
+            <div id="totalSortsChart" class="chartDiv" ></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"  style="color: #336699">
+                10) 数据库每秒排序溢出情况：
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 chartCaption">说明：如果数据库排序溢出比较高，且保持比较长时间段，则可能需要调整SQL</div>
+            <div id="sortOverflowChart" class="chartDiv" ></div>
+        </div>
         <h3 class="sub-header" style="color: #336699">3、数据库Top SQL</h3>
         <div class="row">
             <div class="col-md-6"  style="color: #336699">
@@ -565,6 +583,8 @@
         chartAjax('avgLogReadsChart','/Home/getavglogreads','数据库平均每秒逻辑读行数','数据库每秒逻辑读');
         chartAjax('avgLockWaitTimeChart','/Home/getavglockwaittime','数据库平均锁等待时间','数据库平均锁等待时间');
         chartAjax('lockEscalsChart','/Home/getlockescals','数据库锁升级情况','数据库锁升级次数');
+        chartAjax('totalSortsChart','/Home/gettotalsorts','数据库平均排序情况','数据库平均排序次数');
+        chartAjax('sortOverflowChart','/Home/getsortoverflow','数据库平均排序溢出','数据库平均排序溢出次数');
 
         tableAjax('topSlowSqlTbody','/Home/gettopslowsql',['SNAPTIME','NUM_EXEC_WITH_METRICS','AVG_EXEC_TIME','AVG_ROW_READ','SQL_TEXT']);
         tableAjax('topRowsReadSqlTbody','/Home/gettoprowsreadsql',['SNAPTIME','NUM_EXEC_WITH_METRICS','AVG_EXEC_TIME','AVG_ROW_READ','SQL_TEXT']);

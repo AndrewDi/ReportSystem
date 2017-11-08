@@ -117,11 +117,29 @@ public class HomeController {
         return this.dbConnService.getTPS(DBName,StartTime,EndTime);
     }
 
+    @RequestMapping("getsortoverflow")
+    public @ResponseBody
+    Map<String, Object[]> getSortOverflow(@RequestParam(value = "DBName",required = true) String DBName,
+                                 @RequestParam(value = "StartTime",required = true) String StartTime,
+                                 @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getSortOverFlow(DBName,StartTime,EndTime);
+    }
+
+    @RequestMapping("gettotalsorts")
+    public @ResponseBody
+    Map<String, Object[]> getTotalSorts(@RequestParam(value = "DBName",required = true) String DBName,
+                                        @RequestParam(value = "StartTime",required = true) String StartTime,
+                                        @RequestParam(value = "EndTime",required = true) String EndTime){
+
+        return this.dbConnService.getTotalSorts(DBName,StartTime,EndTime);
+    }
+
     @RequestMapping("getconcurrent")
     public @ResponseBody
     Map<String, Object[]> getConCurrent(@RequestParam(value = "DBName",required = true) String DBName,
-                                 @RequestParam(value = "StartTime",required = true) String StartTime,
-                                 @RequestParam(value = "EndTime",required = true) String EndTime){
+                                        @RequestParam(value = "StartTime",required = true) String StartTime,
+                                        @RequestParam(value = "EndTime",required = true) String EndTime){
 
         return this.dbConnService.getConCurrent(DBName,StartTime,EndTime);
     }
